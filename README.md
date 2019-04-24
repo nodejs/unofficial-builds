@@ -50,4 +50,3 @@ unofficial-builds is maintained by:
 
 * [@rvagg](https://github.com/rvagg)
 * ... _contribute something and add yourself here!_
-
