@@ -10,6 +10,7 @@ image_tag_pfx=unofficial-build-recipe-
 # 'fetch-source' is a special case and needs to go first
 recipes=" \
   fetch-source \
+  headers \
   x86 \
   musl \
   armv6l \
@@ -28,6 +29,9 @@ fullversion="$1"
 . ${__dirname}/_decode_version.sh
 decode "$fullversion"
 # see _decode_version for all of the magic variables now set and available for use
+
+# Point RELEASE_URLBASE to the Unofficial Builds server
+unofficial_release_urlbase="https://unofficial-builds.nodejs.org/download/${disttype}/"
 
 thislogdir="${logdir}/$(date -u +'%Y%m%d%H%M')-${fullversion}"
 mkdir -p $thislogdir
@@ -68,7 +72,7 @@ for recipe in $recipes; do
   docker run --rm \
     ${ccachemount} ${sourcemount} ${stagingmount} \
     "${image_tag_pfx}${recipe}" \
-    "$release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" \
+    "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" \
     > ${thislogdir}/${recipe}.log 2>&1
 done
 
