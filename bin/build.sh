@@ -7,9 +7,7 @@
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 image_tag_pfx=unofficial-build-recipe-
 # all of our build recipes, new recipes just go into this list,
-# 'fetch-source' is a special case and needs to go first
 recipes=" \
-  fetch-source \
   headers \
   x86 \
   musl \
@@ -54,6 +52,14 @@ distdir_promote="${distdir}/${disttype_promote}"
 distoutdir="${distdir_promote}/${fullversion}"
 mkdir -p $distoutdir
 
+# Build fetch-source, needs to be the first and must succeed
+docker run --rm \
+  -v ${sourcedir}:/out \
+  "${image_tag_pfx}fetch-source" \
+  "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" \
+  > ${thislogdir}/fetch-source.log 2>&1
+
+# Build all other recipes
 for recipe in $recipes; do
   # each recipe has 3 variable components:
   # - individiaul ~/.ccache directory
@@ -63,17 +69,13 @@ for recipe in $recipes; do
   mkdir -p "${ccachedir}/${recipe}"
   sourcemount="-v ${sourcefile}:/home/node/node.tar.xz"
   stagingmount="-v ${stagingoutdir}:/out"
-  if [[ "$recipe" = "fetch-source" ]]; then
-    stagingmount="-v ${sourcedir}:/out"
-    sourcemount=""
-  fi
 
   # each recipe logs to its own log file in the $thislogdir directory
   docker run --rm \
     ${ccachemount} ${sourcemount} ${stagingmount} \
     "${image_tag_pfx}${recipe}" \
     "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" \
-    > ${thislogdir}/${recipe}.log 2>&1
+    > ${thislogdir}/${recipe}.log 2>&1 || echo "Failed to build recipe for ${recipe}"
 done
 
 # promote all assets in staging
