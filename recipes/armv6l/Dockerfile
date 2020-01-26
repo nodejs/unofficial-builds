@@ -6,7 +6,7 @@ RUN addgroup --gid 1000 node \
 RUN apt-get update \
     && apt-get dist-upgrade -y \
     && apt-get install -y software-properties-common \
-    && add-apt-repository ppa:ubuntu-toolchain-r/test \
+    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     &&  apt-get update \
     && apt-get install -y \
          git \
