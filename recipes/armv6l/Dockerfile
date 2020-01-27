@@ -7,7 +7,7 @@ RUN apt-get update \
     && apt-get dist-upgrade -y \
     && apt-get install -y software-properties-common \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
-    &&  apt-get update \
+    && apt-get update \
     && apt-get install -y \
          git \
          curl \
