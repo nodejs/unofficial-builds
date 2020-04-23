@@ -5,6 +5,7 @@
 # docker image
 
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+workdir=${workdir:-__dirname/../..}
 image_tag_pfx=unofficial-build-recipe-
 # all of our build recipes, new recipes just go into this list,
 recipes=" \
@@ -12,11 +13,12 @@ recipes=" \
   x86 \
   musl \
   armv6l \
+  x64-pointer-compression \
 "
-ccachedir=$(realpath "${__dirname}/../../.ccache")
-stagingdir=$(realpath "${__dirname}/../../staging")
-distdir=$(realpath "${__dirname}/../../download")
-logdir=$(realpath "${__dirname}/../../logs")
+ccachedir=$(realpath "${workdir}/.ccache")
+stagingdir=$(realpath "${workdir}/staging")
+distdir=$(realpath "${workdir}/download")
+logdir=$(realpath "${workdir}/logs")
 
 if [[ "X${1}" = "X" ]]; then
   echo "Please supply a Node.js version string"
@@ -69,6 +71,14 @@ for recipe in $recipes; do
   mkdir -p "${ccachedir}/${recipe}"
   sourcemount="-v ${sourcefile}:/home/node/node.tar.xz"
   stagingmount="-v ${stagingoutdir}:/out"
+
+  shouldbuild="${__dirname}/../recipes/$recipe/should-build.sh"
+
+  if [ -f "$shouldbuild" ]; then
+    if ! "$shouldbuild" "$__dirname" "$fullversion"; then
+      continue
+    fi
+  fi
 
   # each recipe logs to its own log file in the $thislogdir directory
   docker run --rm \

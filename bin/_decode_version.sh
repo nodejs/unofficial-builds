@@ -34,6 +34,13 @@ decode() {
       datestring="${BASH_REMATCH[6]}"
       commit="${BASH_REMATCH[7]}"
     fi
+
+    if [[ "$version" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+      major="${BASH_REMATCH[1]}"
+      minor="${BASH_REMATCH[2]}"
+      patch="${BASH_REMATCH[3]}"
+    fi
+
     release_urlbase="https://nodejs.org/download/${disttype}/"
     source_url="${release_urlbase}${fullversion}/node-${fullversion}.tar.xz"
     # this is just an unfortunate artifact of history, most disttypes that are not nightly or release
