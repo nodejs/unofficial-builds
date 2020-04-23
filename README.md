@@ -49,4 +49,5 @@ The build process can be described as:
 unofficial-builds is maintained by:
 
 * [@rvagg](https://github.com/rvagg)
+* [@mmarchini](https://github.com/mmarchini)
 * ... _contribute something and add yourself here!_
