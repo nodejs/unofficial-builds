@@ -5,7 +5,7 @@
 # docker image
 
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-workdir=${workdir:-__dirname/../..}
+workdir=${workdir:-"$__dirname"/../..}
 image_tag_pfx=unofficial-build-recipe-
 # all of our build recipes, new recipes just go into this list,
 recipes=" \
