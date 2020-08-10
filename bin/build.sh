@@ -14,6 +14,7 @@ recipes=" \
   musl \
   armv6l \
   x64-pointer-compression \
+  x64-usdt \
 "
 ccachedir=$(realpath "${workdir}/.ccache")
 stagingdir=$(realpath "${workdir}/staging")
