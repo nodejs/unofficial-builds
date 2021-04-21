@@ -11,7 +11,8 @@ RUN yum install -y epel-release \
          git \
          curl \
          make \
-         python \
+         python2 \
+         python3 \
          ccache \
          xz-utils \
          devtoolset-6.i686 \
