@@ -15,7 +15,7 @@ RUN apk add --no-cache \
         libgcc \
         linux-headers \
         make \
-        python \
+        python3 \
         ccache \
         xz
 

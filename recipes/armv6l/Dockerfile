@@ -16,7 +16,8 @@ RUN apt-get update \
          gcc-6-multilib \
          g++-6-multilib \
          make \
-         python \
+         python2 \
+         python3 \
          ccache \
          xz-utils
 
