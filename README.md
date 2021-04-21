@@ -12,7 +12,7 @@ This list of officially supported platforms is available in the Node.js [BUILDIN
 
 ## Builds
 
- * **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/) version 1.1.20. Primarily useful for users of Alpine Linux 3.9 and later. Linux x64 with musl is considered "Experimental" by Node.js but the Node.js test infrastructure includes some Alpine test servers so support is generally good.
+ * **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/) version 1.1.20. Primarily useful for users of Alpine Linux 3.9 and later. Linux x64 with musl is considered "Experimental" by Node.js but the Node.js test infrastructure includes some Alpine test servers so support is generally good. These Node.js builds require the `libstdc++` package to be installed on Alpine Linux, which is not installed by default. You can add this by running `apk add libstdc++`.
  * **linux-x86**: Linux x86 (32-bit) binaries compiled against libc 2.17, similar to the way the official [linux-x64 binaries are produced](https://github.com/nodejs/node/blob/master/BUILDING.md#official-binary-platforms-and-toolchains). 32-bit Linux binaries were dropped for Node.js 10 and 32-bit support is now considered "Experimental".
  * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 16.04 with a [custom GCC 6 toolchain] in a similar manner to the official linux-armv7l binaries. Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular). ARMv6 binaries were dropped from Node.js 12 and ARMv6 support is now considered "Experimental".
 
