@@ -17,6 +17,7 @@ RUN apt-get update \
          g++-8-multilib \
          make \
          python3 \
+	 python3-distutils \
          ccache \
          xz-utils
 
