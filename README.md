@@ -44,6 +44,20 @@ The build process can be described as:
 4. `periodic.sh` calls [`/bin/build-if-queued.sh`](/bin/build-if-queued.sh) which will execute a build if there is at least one build in the queue and no builds are currently running. [`/bin/queue-pop.sh`](/bin/queue-pop.sh) is used to atomically remove the next build from the queue. Note that only zero or one build per periodic run is executed. If the queue has more than one build, these will be deferred until later periodic runs.
 5. When `build-if-queued.sh` encounters a build in the queue that it can execute, it calls [`/bin/build.sh`](/bin/build.sh) to perform the build. This script iterates through the images that have been pre-built from the [`/recipes`](/recipes) directory, starting with the [`/recipes/fetch-source`](/recipes/fetch-source) recipe that fetches the source file for the given version and validates official releases using GPG keys. Optionally, a recipe might have a `should-build` file which is used to determine if the recipe should run for a specific Node.js version. Each recipe is passed this source and is given a staging directory to place its binaries in. After all recipes are finished, builds are promoted to the <https://unofficial-builds.nodejs.org/download/> directory along with a SHASUMS256.txt file and the index.tab and index.json files for that release type are updated.
 
+## Manual build triggers
+
+Admins with access to the server can manually trigger a build using the [`/bin/queue-push.sh`](/bin/queue-push.sh) command. e.g.
+
+```sh
+su nodejs # perform the action as the "nodejs" user so as to retain proper queue permissions
+cd ~
+unofficial-builds/bin/queue-push.sh v16.4.0 # queue a new build for "v16.4.0" - the "v" is necessary
+```
+
+This places "v16.4.0" into `~/var/build_queue` which will be read on the next invocation of the build check timer. It may take up to 5 minutes for the build to start, at which point the log should be visible at <https://unofficial-builds.nodejs.org/logs/>.
+
+The same process can be used to queue `rc` or `test` builds.
+
 ## Team
 
 unofficial-builds is maintained by:
