@@ -64,4 +64,5 @@ unofficial-builds is maintained by:
 
 * [@rvagg](https://github.com/rvagg)
 * [@mmarchini](https://github.com/mmarchini)
+* [@richardlau](https://github.com/richardlau)
 * ... _contribute something and add yourself here!_
