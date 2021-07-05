@@ -17,9 +17,8 @@ gpg_keys=$(curl -sL https://raw.githubusercontent.com/nodejs/docker-node/master/
 
 for key in ${gpg_keys}; do
   gpg --list-keys "$key" ||
-  gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" ||
-  gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" ||
-  gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ;
+      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
+      gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
 done
 
 curl -fsSLO --compressed "${source_url}/../node-${fullversion}-headers.tar.gz"

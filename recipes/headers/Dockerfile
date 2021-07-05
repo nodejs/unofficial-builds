@@ -7,9 +7,8 @@ RUN apk add --no-cache bash gnupg curl
 
 RUN for key in $(curl -sL https://raw.githubusercontent.com/nodejs/docker-node/master/keys/node.keys) \
   ; do \
-    gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-    gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
-    gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
+      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
+      gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
   done
 
 COPY --chown=node:node run.sh /home/node/run.sh
