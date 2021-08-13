@@ -19,8 +19,13 @@ cd "node-${fullversion}"
 
 export CC="ccache gcc"
 export CXX="ccache g++"
+export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)
 
-. /opt/rh/devtoolset-8/enable
+if [ $MAJOR_VERSION -ge 16 ]; then
+  . /opt/rh/devtoolset-9/enable
+else
+  . /opt/rh/devtoolset-8/enable
+fi
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="x64" \

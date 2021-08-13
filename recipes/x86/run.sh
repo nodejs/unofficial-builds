@@ -21,8 +21,13 @@ export CC="ccache gcc"
 export CXX="ccache g++"
 export CXXFLAGS=-m32
 export CFLAGS=-m32
+export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)
 
-. /opt/rh/devtoolset-6/enable
+if [ $MAJOR_VERSION -ge 16 ]; then
+  . /opt/rh/devtoolset-9/enable
+else
+  . /opt/rh/devtoolset-6/enable
+fi
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="x86" \
