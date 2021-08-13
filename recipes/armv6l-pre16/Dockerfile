@@ -1,7 +1,10 @@
 FROM ubuntu:16.04
 
-RUN addgroup --gid 1000 node \
-    && adduser --gid 1000 --uid 1000 --disabled-password --gecos node node
+ARG GID=1000
+ARG UID=1000
+
+RUN addgroup --gid $GID node \
+    && adduser --gid $GID --uid $UID --disabled-password --gecos node node
 
 RUN apt-get update \
     && apt-get dist-upgrade -y \

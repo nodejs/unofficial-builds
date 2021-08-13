@@ -1,7 +1,10 @@
 FROM alpine:3.9
 
-RUN addgroup -g 1000 node \
-    && adduser -u 1000 -G node -s /bin/sh -D node
+ARG GID=1000
+ARG UID=1000
+
+RUN addgroup -g $GID node \
+    && adduser -u $UID -G node -s /bin/sh -D node
 
 RUN apk add --no-cache bash gnupg curl
 
