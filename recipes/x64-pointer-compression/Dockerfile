@@ -1,7 +1,10 @@
 FROM centos:7
 
-RUN groupadd --gid 1000 node \
-    && adduser --gid 1000 --uid 1000 node
+ARG GID=1000
+ARG UID=1000
+
+RUN groupadd --gid $GID node \
+    && adduser --gid $GID --uid $UID node
 
 COPY cloudlinux.repo /etc/yum.repos.d/cloudlinux.repo
 
