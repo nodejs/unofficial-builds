@@ -17,6 +17,8 @@ RUN yum install -y epel-release \
          xz-utils \
          devtoolset-8 \
          devtoolset-8-systemtap-sdt-devel \
+         devtoolset-9 \
+         devtoolset-9-systemtap-sdt-devel \
          glibc-devel
 
 COPY --chown=node:node run.sh /home/node/run.sh

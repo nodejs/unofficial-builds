@@ -16,6 +16,7 @@ RUN yum install -y epel-release \
          ccache \
          xz-utils \
          devtoolset-8 \
+         devtoolset-9 \
          glibc-devel
 
 COPY --chown=node:node run.sh /home/node/run.sh
