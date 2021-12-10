@@ -14,7 +14,7 @@ config_flags=
 
 cd /home/node
 
-gpg_keys=$(curl -sL https://raw.githubusercontent.com/nodejs/docker-node/master/keys/node.keys)
+gpg_keys=$(curl -sL https://raw.githubusercontent.com/nodejs/docker-node/HEAD/keys/node.keys)
 
 for key in ${gpg_keys}; do
   gpg --list-keys "$key" ||
