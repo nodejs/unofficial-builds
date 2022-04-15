@@ -64,7 +64,10 @@ The same process can be used to queue `rc` or `test` builds.
 unofficial-builds is maintained by:
 
 * [@rvagg](https://github.com/rvagg)
-* [@mmarchini](https://github.com/mmarchini)
 * [@richardlau](https://github.com/richardlau)
 * [@sxa](https://github.com/sxa)
 * ... _contribute something and add yourself here!_
+
+## Emeritus
+
+* [@mmarchini](https://github.com/mmarchini)
