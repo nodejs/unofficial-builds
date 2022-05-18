@@ -22,7 +22,7 @@ cd "node-${fullversion}"
 major=$(echo ${fullversion} | cut -d . -f 1 | tr -d v)
 if [ "$major" == "16" ]; then
   wget https://github.com/nodejs/node/commit/6ac1cccf9fd565f92f9e1cc5c7d792d5410a7c54.diff
-  patch -p1 < 6ac1cccf9fd565f92f9e1cc5c7d792d5410a7c54.diff
+  patch -p1 < 6ac1cccf9fd565f92f9e1cc5c7d792d5410a7c54.diff || true
   rm 6ac1cccf9fd565f92f9e1cc5c7d792d5410a7c54.diff
 fi
 
