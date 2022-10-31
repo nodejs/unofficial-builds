@@ -7,17 +7,7 @@
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 workdir=${workdir:-"$__dirname"/../..}
 image_tag_pfx=unofficial-build-recipe-
-# all of our build recipes, new recipes just go into this list,
-recipes=" \
-  headers \
-  x86 \
-  musl \
-  armv6l \
-  armv6l-pre16 \
-  x64-pointer-compression \
-  x64-usdt \
-  riscv64 \
-"
+
 ccachedir=$(realpath "${workdir}/.ccache")
 stagingdir=$(realpath "${workdir}/staging")
 distdir=$(realpath "${workdir}/download")
@@ -29,9 +19,26 @@ if [[ "X${1}" = "X" ]]; then
 fi
 
 fullversion="$1"
+shift 1
 . ${__dirname}/_decode_version.sh
 decode "$fullversion"
 # see _decode_version for all of the magic variables now set and available for use
+
+if [[ $# -gt 0 ]]; then
+  recipes=( "$@" )
+else
+  # all of our build recipes, new recipes just go into this list,
+  recipes=(
+    headers
+    x86
+    musl
+    armv6l
+    pre16
+    compression
+    usdt
+    riscv64
+  )
+fi
 
 # Point RELEASE_URLBASE to the Unofficial Builds server
 unofficial_release_urlbase="https://unofficial-builds.nodejs.org/download/${disttype}/"
@@ -65,7 +72,7 @@ docker run --rm \
   > ${thislogdir}/fetch-source.log 2>&1
 
 # Build all other recipes
-for recipe in $recipes; do
+for recipe in "${recipes[@]}" ; do
   # each recipe has 3 variable components:
   # - individiaul ~/.ccache directory
   # - a ~/node.tar.xz file that fetch-source has downloaded
