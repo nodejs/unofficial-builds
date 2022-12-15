@@ -14,6 +14,7 @@ recipes=" \
   musl \
   armv6l \
   armv6l-pre16 \
+  x64-glibc-217 \
   x64-pointer-compression \
   x64-usdt \
   riscv64 \
@@ -67,7 +68,7 @@ docker run --rm \
 # Build all other recipes
 for recipe in $recipes; do
   # each recipe has 3 variable components:
-  # - individiaul ~/.ccache directory
+  # - individual ~/.ccache directory
   # - a ~/node.tar.xz file that fetch-source has downloaded
   # - an output /out directory that puts generated assets into a staging directory
   ccachemount="-v ${ccachedir}/${recipe}/:/home/node/.ccache/"
