@@ -9,7 +9,7 @@ datestring="$4"
 commit="$5"
 fullversion="$6"
 source_url="$7"
-config_flags=""
+config_flags="--openssl-no-asm"
 
 cd /home/node
 
