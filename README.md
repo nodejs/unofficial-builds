@@ -59,6 +59,24 @@ This places "v16.4.0" into `~/var/build_queue` which will be read on the next in
 
 The same process can be used to queue `rc` or `test` builds.
 
+## Local development
+
+Build all platforms:
+
+```sh
+mkdir -p build
+bin/prepare-images.sh && \
+  workdir=$PWD/build bin/build.sh v18.12.0
+```
+
+Or just (re)build, say, x86:
+
+```sh
+mkdir -p build
+bin/prepare-images.sh fetch-source x86 && \
+  workdir=$PWD/build bin/build.sh v18.12.0 x86
+```
+
 ## Team
 
 unofficial-builds is maintained by:
