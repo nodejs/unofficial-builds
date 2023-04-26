@@ -29,6 +29,7 @@ if [[ "X${1}" = "X" ]]; then
 fi
 
 fullversion="$1"
+shift
 . ${__dirname}/_decode_version.sh
 decode "$fullversion"
 # see _decode_version for all of the magic variables now set and available for use
@@ -65,7 +66,7 @@ docker run --rm \
   > ${thislogdir}/fetch-source.log 2>&1
 
 # Build all other recipes
-for recipe in $recipes; do
+for recipe in ${1:-$recipes}; do
   # each recipe has 3 variable components:
   # - individiaul ~/.ccache directory
   # - a ~/node.tar.xz file that fetch-source has downloaded
