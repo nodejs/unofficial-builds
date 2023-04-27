@@ -10,6 +10,19 @@ This list of officially supported platforms is available in the Node.js [BUILDIN
 
 **unofficial-builds** attempts to provide basic Node.js binaries for some platforms that either not supported or only partially supported by Node.js. This project **does not provide any guarantees** and its results are not rigorously tested. Builds made available at nodejs.org have very high quality standards for code quality, support on the relevant platforms and for timing and methods of delivery. Builds made available by unofficial-builds have minimal or no testing; the platforms may have no inclusion in the official Node.js test infrastructure. These builds are made available for the convenience of their user community but those communities are expected to assist in their maintenance.
 
+## Run
+
+Execute the following commands to cross compile riscv64 node binaries. Select the node version on the `bin/build.sh` call.
+
+```sh
+./bin/prepare-images.sh "fetch-source riscv64"
+mkdir -p build/download
+mkdir -p build/logs
+mkdir -p build/staging
+mkdir -p build/.ccache
+workdir=$PWD/build/ bin/build.sh v18.16.0 riscv64
+```
+
 ## Builds
 
  * **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/) version 1.1.20. Primarily useful for users of Alpine Linux 3.9 and later. Linux x64 with musl is considered "Experimental" by Node.js but the Node.js test infrastructure includes some Alpine test servers so support is generally good. These Node.js builds require the `libstdc++` package to be installed on Alpine Linux, which is not installed by default. You can add this by running `apk add libstdc++`.
