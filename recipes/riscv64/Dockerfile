@@ -21,7 +21,7 @@ RUN apt-get update \
          ccache \
          xz-utils
 
-RUN curl https://ci.adoptopenjdk.net/userContent/riscv/riscv_toolchain_linux64.tar.xz | tar xJf - -C /opt
+RUN curl https://ci.adoptium.net/userContent/riscv/riscv_toolchain_linux64.tar.xz | tar xJf - -C /opt
 
 COPY --chown=node:node run.sh /home/node/run.sh
 
