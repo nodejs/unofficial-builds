@@ -14,6 +14,7 @@ recipes=" \
   musl \
   armv6l \
   armv6l-pre16 \
+  arm64-glibc-217 \
   x64-glibc-217 \
   x64-pointer-compression \
   x64-usdt \
