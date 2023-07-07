@@ -22,7 +22,15 @@ for key in ${gpg_keys}; do
       gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
 done
 
-curl -fsSLO --compressed "$source_url"
+# Curl with retry
+for ((i=1;i<=7;i++)); do
+  if curl -fsSLO --compressed "$source_url"; then
+    break
+  else
+    echo "Curl failed with status $?. Retrying in 10 seconds..."
+    sleep 10
+  fi
+done
 
 if [[ "$disttype" = "release" ]]; then
   curl -fsSLO --compressed "${source_url}/../SHASUMS256.txt.asc"
