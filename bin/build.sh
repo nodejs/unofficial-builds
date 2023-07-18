@@ -18,6 +18,7 @@ recipes=" \
   x64-pointer-compression \
   x64-usdt \
   riscv64 \
+  loong64 \
 "
 ccachedir=$(realpath "${workdir}/.ccache")
 stagingdir=$(realpath "${workdir}/staging")
