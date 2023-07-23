@@ -13,7 +13,6 @@ recipes=" \
   x86 \
   musl \
   armv6l \
-  armv6l-pre16 \
   x64-glibc-217 \
   x64-pointer-compression \
   x64-usdt \
