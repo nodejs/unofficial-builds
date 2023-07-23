@@ -23,8 +23,6 @@ export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)
 
 if [ $MAJOR_VERSION -ge 16 ]; then
   . /opt/rh/devtoolset-9/enable
-else
-  . /opt/rh/devtoolset-8/enable
 fi
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
