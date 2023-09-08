@@ -47,6 +47,13 @@ The build process can be described as:
 4. `periodic.sh` calls [`/bin/build-if-queued.sh`](/bin/build-if-queued.sh) which will execute a build if there is at least one build in the queue and no builds are currently running. [`/bin/queue-pop.sh`](/bin/queue-pop.sh) is used to atomically remove the next build from the queue. Note that only zero or one build per periodic run is executed. If the queue has more than one build, these will be deferred until later periodic runs.
 5. When `build-if-queued.sh` encounters a build in the queue that it can execute, it calls [`/bin/build.sh`](/bin/build.sh) to perform the build. This script iterates through the images that have been pre-built from the [`/recipes`](/recipes) directory, starting with the [`/recipes/fetch-source`](/recipes/fetch-source) recipe that fetches the source file for the given version and validates official releases using GPG keys. Optionally, a recipe might have a `should-build` file which is used to determine if the recipe should run for a specific Node.js version. Each recipe is passed this source and is given a staging directory to place its binaries in. After all recipes are finished, builds are promoted to the <https://unofficial-builds.nodejs.org/download/> directory along with a SHASUMS256.txt file and the index.tab and index.json files for that release type are updated.
 
+## How to add new target
+
+1. Add target dir in recipe, and ensure that the necessary functions are implemented according to the above process description.
+2. Add target to the recipes list in bin/build.sh.
+3. In order for the index.dat and index.json to index the new target, you may need to modify [nodejs-dist-indexer](https://github.com/nodejs/nodejs-dist-indexer/blob/main/transform-filename.js).
+4. Add or modify the README if necessary.
+
 ## Manual build triggers
 
 Admins with access to the server can manually trigger a build using the [`/bin/queue-push.sh`](/bin/queue-push.sh) command. e.g.
