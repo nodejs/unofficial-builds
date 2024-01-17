@@ -13,12 +13,12 @@ recipes=" \
   x86 \
   musl \
   armv6l \
+  x64-debug \
   x64-glibc-217 \
   x64-pointer-compression \
   x64-usdt \
   riscv64 \
   loong64 \
-  debug \
 "
 ccachedir=$(realpath "${workdir}/.ccache")
 stagingdir=$(realpath "${workdir}/staging")

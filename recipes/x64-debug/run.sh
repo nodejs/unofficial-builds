@@ -10,7 +10,7 @@ datestring="$4"
 commit="$5"
 fullversion="$6"
 source_url="$7"
-config_flags=""
+config_flags="--gdb --debug --debug-node"
 
 cd /home/node
 
@@ -19,8 +19,6 @@ cd "node-${fullversion}"
 
 export CC="ccache gcc"
 export CXX="ccache g++"
-
-./configure --debug
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="x64" \
