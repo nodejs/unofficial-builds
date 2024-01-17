@@ -7,4 +7,6 @@ fullversion=$2
 
 decode "$fullversion"
 
+assert_eq "$disttype" "release"
+
 test "$major" -ge "18"
