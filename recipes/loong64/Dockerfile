@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
 ARG GID=1000
 ARG UID=1000
@@ -13,19 +13,15 @@ RUN apt-get update \
     && apt-get update \
     && apt-get install -y \
          git \
+	 g++-13 \
          curl \
-         g++-6 \
-         gcc-6 \
-         gcc-6-multilib \
-         g++-6-multilib \
          make \
-         python \
          python3 \
+	 python3-distutils \
          ccache \
          xz-utils
 
-RUN git clone --depth=1 https://github.com/rvagg/rpi-newer-crosstools \
-    /opt/rpi-newer-crosstools/
+RUN curl -L https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-7.3-cross-tools-gcc-glibc.tar.xz | tar xJf - -C /opt
 
 COPY --chown=node:node run.sh /home/node/run.sh
 

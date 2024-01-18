@@ -7,4 +7,4 @@ fullversion=$2
 
 decode "$fullversion"
 
-test "$major" -lt "16"
+test "$major" -ge "18"

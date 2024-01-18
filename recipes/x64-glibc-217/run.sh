@@ -10,7 +10,7 @@ datestring="$4"
 commit="$5"
 fullversion="$6"
 source_url="$7"
-config_flags=--openssl-no-asm
+config_flags=""
 
 cd /home/node
 
@@ -19,18 +19,14 @@ cd "node-${fullversion}"
 
 export CC="ccache gcc"
 export CXX="ccache g++"
-export CXXFLAGS=-m32
-export CFLAGS=-m32
 export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)
 
-if [ $MAJOR_VERSION -ge 16 ]; then
-  . /opt/rh/devtoolset-9/enable
-fi
+. /opt/rh/devtoolset-9/enable
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
-  DESTCPU="x86" \
-  ARCH="x86" \
-  VARIATION="" \
+  DESTCPU="x64" \
+  ARCH="x64" \
+  VARIATION="glibc-217" \
   DISTTYPE="$disttype" \
   CUSTOMTAG="$customtag" \
   DATESTRING="$datestring" \

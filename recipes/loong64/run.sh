@@ -10,21 +10,21 @@ datestring="$4"
 commit="$5"
 fullversion="$6"
 source_url="$7"
-config_flags=
+config_flags="--openssl-no-asm"
 
 cd /home/node
 
 tar -xf node.tar.xz
 cd "node-${fullversion}"
 
-export CC_host="ccache gcc-6 -m32"
-export CXX_host="ccache g++-6 -m32"
-export CC="ccache /opt/rpi-newer-crosstools/x64-gcc-6.5.0/arm-rpi-linux-gnueabihf/bin/arm-rpi-linux-gnueabihf-gcc -march=armv6zk"
-export CXX="ccache /opt/rpi-newer-crosstools/x64-gcc-6.5.0/arm-rpi-linux-gnueabihf/bin/arm-rpi-linux-gnueabihf-g++ -march=armv6zk"
+export CC_host="ccache gcc-13"
+export CXX_host="ccache g++-13"
+export CC="ccache /opt/cross-tools/bin/loongarch64-unknown-linux-gnu-gcc"
+export CXX="ccache /opt/cross-tools/bin/loongarch64-unknown-linux-gnu-g++"
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
-  DESTCPU="arm" \
-  ARCH="armv6l" \
+  DESTCPU="loong64" \
+  ARCH="loong64" \
   VARIATION="" \
   DISTTYPE="$disttype" \
   CUSTOMTAG="$customtag" \
