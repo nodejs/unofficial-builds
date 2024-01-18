@@ -76,7 +76,7 @@ unofficial_release_urlbase="https://unofficial-builds.nodejs.org/download/${dist
 
 for r in "fetch-source" "${recipe}"; do
   echo "Building ${r} recipe and tagging as ${image_tag_pfx}${r}..."
-  docker build ${__dirname}/../recipes/${r}/ -t ${image_tag_pfx}${r} --build-arg UID=1000 --build-arg GID=1000
+  docker build ${__dirname}/../recipes/${r}/ -t ${image_tag_pfx}${r} --build-arg UID=$(id -u) --build-arg GID=$(id -g)
 done
 
 ## -- DOWNLOAD SOURCE -- ##
@@ -84,6 +84,7 @@ done
 if [[ ! -f "${sourcefile}" ]]; then
   echo "Downloading source tarball..."
   docker run --rm \
+    --user=$(id -u) \
     -v ${sourcedir}:/out \
     "${image_tag_pfx}fetch-source" \
     "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url"
@@ -100,6 +101,7 @@ stagingmount="-v ${stagingoutdir}:/out"
 ccachemount="-v ${ccachedir}/${recipe}/:/home/node/.ccache/"
 mkdir -p "${ccachedir}/${recipe}"
 docker run --rm \
+  --user=$(id -u) \
   ${ccachemount} ${sourcemount} ${stagingmount} \
   "${image_tag_pfx}${recipe}" \
   "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url"
