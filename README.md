@@ -4,6 +4,20 @@
 
 _**This project is experimental: its output is not guaranteed to remain consistent and its existence is not guaranteed into the future.** This project is in need of a community of maintainers to keep it viable. If you would like to join, please submit pull requests to improve the work here._
 
+* [About](#about)
+* [Builds](#builds)
+* [How](#how)
+* [How to add new target](#how-to-add-new-target)
+* [Manual build triggers](#manual-build-triggers)
+* [Local use](#local-use)
+  * [Setup for local builds](#setup-for-local-builds)
+  * [Building](#building)
+* [Team](#team)
+* [Emeritus](#emeritus)
+
+
+## About
+
 The **unofficial-builds** project aims to provide Node.js binaries for some platforms not made available officially by the Node.js project at nodejs.org. Node.js is used on a large variety of platforms, but the Node.js project, in consultation with the [Node.js Build Working Group](https://github.com/nodejs/build), maintains a limited set of platforms that it tests code on and produces binaries for.
 
 This list of officially supported platforms is available in the Node.js [BUILDING.md](https://github.com/nodejs/node/blob/main/BUILDING.md#platform-list), where you can also find details in the [official nodejs.org binaries](https://github.com/nodejs/node/blob/main/BUILDING.md#official-binary-platforms-and-toolchains) section. Some platforms are "supported" in that they are tested by the Node.js test infrastructure, but they don't have binaries produced for nodejs.org. Other platforms receive minimal or no official support.
@@ -67,6 +81,42 @@ unofficial-builds/bin/queue-push.sh v16.4.0 # queue a new build for "v16.4.0" - 
 This places "v16.4.0" into `~/var/build_queue` which will be read on the next invocation of the build check timer. It may take up to 5 minutes for the build to start, at which point the log should be visible at <https://unofficial-builds.nodejs.org/logs/>.
 
 The same process can be used to queue `rc` or `test` builds.
+
+## Local use
+
+This repository is primarily intended for use on the unofficial-builds server but it can be used locally for testing purposes. The `bin/local_build.sh` script is designed to mirror the server build process but with local trigger and for one specific recipe at a time.
+
+### Setup for local builds
+
+On deploy, this repository is placed within a the `unofficial-builds` home directory on the server, it is intended to operate from a subdirectory of where the assets are build, it's `$workdir` is the parent directory of wherever it is located. The `local_build.sh` script will create some directories within its `$workdir` so it's best to create a new directory for it to operate in. e.g.:
+
+* `$workdir`
+  * unofficial-builds/ *(this repository)*
+  * staging/src/ *(source files for builds, made by `local_build.sh`)*
+  * staging/`$disttype`/`$version`/ *(staging directory for builds, made by `local_build.sh`)*
+  * .ccache/ *(ccache cache directory to speed up repeat builds, made by `local_build.sh`)*
+
+e.g. clone this repository using the following commands to place it within an `unofficial-builds-home` directory:
+
+```sh
+mkdir unofficial-builds-home
+cd unofficial-builds-home
+git clone https://github.com/nodejs/unofficial-builds
+```
+
+However, you can override the default `$workdir` behaviour with a `-w <newdir>` argument to `local_build.sh` and direct it to a different directory where it can create its own subdirectories, so the above layout is not strictly necessary.
+
+Please note that these scripts and recipes are intended to run in a Linux x64 environment, they may not work on other platforms, YMMV.
+
+### Building
+
+Once you have cloned this repository, you can build a specific recipe by running `bin/local_build.sh` with the recipe (an existing one or one you create within the `recipes/` subdirectory) name and the Node.js version you want to build. e.g.
+
+```sh
+bin/local_build.sh musl v21.0.0 # build musl binaries for Node.js v21.0.0
+```
+
+A successful build will place the source in `$workdir/staging/src/` and binaries in `$workdir/staging/release/v21.0.0/`.
 
 ## Team
 
