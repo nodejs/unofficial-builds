@@ -38,8 +38,10 @@ for tarball in node-*.tar.?z; do
   temp_dir=$(mktemp -d)
   tar -xf "$tarball" -C "$temp_dir"
 
-  # Copy the debug build to a different name
-  cp out/Debug/node "$temp_dir/bin/node_g"
+  # Replace Relase version with the Debug built version
+  tarball_name=$(echo "$tarball" | sed -e 's/\.tar\.[gx]z$//')
+  rm "$temp_dir/$tarball_name/bin/node"
+  cp out/Debug/node "$temp_dir/$tarball_name/bin/node"
 
   # Recreate the tarball with the same comprbasession format
   case $tarball in
