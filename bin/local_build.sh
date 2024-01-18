@@ -74,9 +74,22 @@ unofficial_release_urlbase="https://unofficial-builds.nodejs.org/download/${dist
 
 ## -- BUILD IMAGES -- ##
 
+UID=$(id -u)
+GID=$(id -g)
+# there's a good chance of a UID/GID conflict in the container if we are less
+# than 1000, so bump to 1000 if that's the case.
+if [[ $UID -lt 1000 ]]; then
+  UID=1000
+  echo -e "\e[1mWarning: UID is less than 1000, setting to 1000, output files will be owned by this UID\e[0m"
+fi
+if [[ $GID -lt 1000 ]]; then
+  GID=1000
+  echo -e "\e[1mWarning: GID is less than 1000, setting to 1000\e[0m"
+fi
+
 for r in "fetch-source" "${recipe}"; do
   echo "Building ${r} recipe and tagging as ${image_tag_pfx}${r}..."
-  docker build ${__dirname}/../recipes/${r}/ -t ${image_tag_pfx}${r} --build-arg UID=$(id -u) --build-arg GID=$(id -g)
+  docker build ${__dirname}/../recipes/${r}/ -t ${image_tag_pfx}${r} --build-arg UID=${UID} --build-arg GID=${GID}
 done
 
 ## -- DOWNLOAD SOURCE -- ##
