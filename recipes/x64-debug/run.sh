@@ -43,7 +43,7 @@ for tarball in node-*.tar.?z; do
   rm "$temp_dir/$tarball_name/bin/node"
   cp out/Debug/node "$temp_dir/$tarball_name/bin/node"
 
-  # Recreate the tarball with the same comprbasession format
+  # Recreate the tarball with the same compression format
   case $tarball in
     *.tar.gz)
       tar -czf "/out/$tarball" -C "$temp_dir" .
