@@ -97,7 +97,7 @@ done
 if [[ ! -f "${sourcefile}" ]]; then
   echo "Downloading source tarball..."
   docker run --rm \
-    --user=$(id -u) \
+    --user=${USER_ID} \
     -v ${sourcedir}:/out \
     "${image_tag_pfx}fetch-source" \
     "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url"
@@ -114,7 +114,7 @@ stagingmount="-v ${stagingoutdir}:/out"
 ccachemount="-v ${ccachedir}/${recipe}/:/home/node/.ccache/"
 mkdir -p "${ccachedir}/${recipe}"
 docker run --rm \
-  --user=$(id -u) \
+  --user=${USER_ID} \
   ${ccachemount} ${sourcemount} ${stagingmount} \
   "${image_tag_pfx}${recipe}" \
   "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url"
