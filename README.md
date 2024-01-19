@@ -113,7 +113,7 @@ Please note that these scripts and recipes are intended to run in a Linux x64 en
 Once you have cloned this repository, you can build a specific recipe by running `bin/local_build.sh` with the recipe (an existing one or one you create within the `recipes/` subdirectory) name and the Node.js version you want to build. e.g.
 
 ```sh
-bin/local_build.sh musl v21.0.0 # build musl binaries for Node.js v21.0.0
+bin/local_build.sh -r musl -v v21.0.0 # build musl binaries for Node.js v21.0.0
 ```
 
 A successful build will place the source in `$workdir/staging/src/` and binaries in `$workdir/staging/release/v21.0.0/`.
