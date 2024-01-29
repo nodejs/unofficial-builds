@@ -14,7 +14,9 @@ VOLUME /out/
 
 USER node
 
-RUN for key in $(curl -sL https://raw.githubusercontent.com/nodejs/docker-node/HEAD/keys/node.keys) \
+RUN mkdir ~/.gnupg && \
+    chmod 700 ~/.gnupg && \
+    for key in $(curl -sL https://raw.githubusercontent.com/nodejs/docker-node/HEAD/keys/node.keys) \
   ; do \
       gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
       gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
