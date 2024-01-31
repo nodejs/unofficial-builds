@@ -2,24 +2,13 @@
 
 # The heart of the build process: given a valid Node.js version string,
 # fetch the source file then build each type of asset using a pre-built
-# docker image
+# docker image.
 
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 workdir=${workdir:-"$__dirname"/../..}
-image_tag_pfx=unofficial-build-recipe-
-# all of our build recipes, new recipes just go into this list,
-recipes=" \
-  headers \
-  x86 \
-  musl \
-  armv6l \
-  x64-debug \
-  x64-glibc-217 \
-  x64-pointer-compression \
-  x64-usdt \
-  riscv64 \
-  loong64 \
-"
+
+source "${__dirname}/_config.sh"
+
 ccachedir=$(realpath "${workdir}/.ccache")
 stagingdir=$(realpath "${workdir}/staging")
 distdir=$(realpath "${workdir}/download")
@@ -99,7 +88,7 @@ mv ${stagingoutdir}/node-v* ${distoutdir}
 (cd "${distoutdir}" && shasum -a256 $(ls node* 2> /dev/null) > SHASUMS256.txt) || exit 1
 echo "Generating indexes (this may error if there is no upstream tag for this build)"
 # index.json and index.tab
-npx nodejs-dist-indexer --dist ${distdir_promote} --indexjson ${distdir_promote}/index.json  --indextab ${distdir_promote}/index.tab || true
+npm exec -y nodejs-dist-indexer@${dist_indexer_version} -- --dist ${distdir_promote} --indexjson ${distdir_promote}/index.json  --indextab ${distdir_promote}/index.tab || true
 
 echo "Finished build @ $(date)"
 

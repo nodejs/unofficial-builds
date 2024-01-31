@@ -10,7 +10,9 @@ usage_exit() {
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # by default, workdir is the parent directory of the cloned repo
 workdir=${workdir:-"$__dirname"/../..}
-image_tag_pfx=unofficial-build-recipe-
+
+source "${__dirname}/_config.sh"
+
 recipe=""
 fullversion=""
 
