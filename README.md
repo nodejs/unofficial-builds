@@ -65,9 +65,10 @@ The build process can be described as:
 ## How to add new target
 
 1. Add target dir in recipe, and ensure that the necessary functions are implemented according to the above process description.
-2. Add target to the recipes list in bin/build.sh.
-3. In order for the index.dat and index.json to index the new target, you may need to modify [nodejs-dist-indexer](https://github.com/nodejs/nodejs-dist-indexer/blob/main/transform-filename.js).
-4. Add or modify the README if necessary.
+2. Add target to the recipes list in `bin/_config.sh`.
+3. In order for the `index.dat` and `index.json` to index the new target, you will likely need to modify [nodejs-dist-indexer](https://github.com/nodejs/nodejs-dist-indexer/blob/main/transform-filename.js) so it understands the new filenames.
+4. After a nodejs-dist-indexer release, the new version will need to be listed in `bin/_config.sh`.
+5. Add or modify the README if necessary.
 
 ## Manual build triggers
 
