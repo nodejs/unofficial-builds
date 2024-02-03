@@ -128,15 +128,19 @@ for recipe in $recipes_to_build; do
     "${image_tag_pfx}${recipe}" \
     "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" \
     > ${thislogdir}/${recipe}.log 2>&1 || echo "Failed to build recipe for ${recipe}"
-done
 
-# promote all assets in staging
-mv ${stagingoutdir}/node-v* ${distoutdir}
-# generate SHASUM256.txt
-(cd "${distoutdir}" && shasum -a256 $(ls node* 2> /dev/null) > SHASUMS256.txt) || exit 1
-echo "Generating indexes (this may error if there is no upstream tag for this build)"
-# index.json and index.tab
-npm exec -y nodejs-dist-indexer@${dist_indexer_version} -- --dist ${distdir_promote} --indexjson ${distdir_promote}/index.json  --indextab ${distdir_promote}/index.tab || true
+  # Total runtime can be up to 10hr for a full recipe so do promotion and
+  # updateing of indexes after each build so dont have to wait for all builds
+  # to finish before consumers can use the assets
+  #
+  # promote all assets in staging
+  mv ${stagingoutdir}/node-v* ${distoutdir}
+  # generate SHASUM256.txt
+  (cd "${distoutdir}" && shasum -a256 $(ls node* 2> /dev/null) > SHASUMS256.txt) || exit 1
+  echo "Generating indexes (this may error if there is no upstream tag for this build)"
+  # index.json and index.tab
+  npx nodejs-dist-indexer --dist ${distdir_promote} --indexjson ${distdir_promote}/index.json  --indextab ${distdir_promote}/index.tab || true
+done
 
 echo "Finished build @ $(date)"
 
