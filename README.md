@@ -133,6 +133,7 @@ unofficial-builds is maintained by:
 * [@richardlau](https://github.com/richardlau)
 * [@sxa](https://github.com/sxa)
 * [@shipujin](https://github.com/shipujin)
+* [@matthewkeil](https://github.com/matthewkeil)
 * ... _contribute something and add yourself here!_
 
 ## Emeritus
