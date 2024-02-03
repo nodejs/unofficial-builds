@@ -7,7 +7,7 @@
 
 # Function to display usage and exit
 usage_exit() {
-  echo "Usage: $0 [-v version] [-r recipe]... [version]"
+  echo "Usage: $0 -v version [-r recipe]"
   exit "${1:-0}" # Exit with provided code or default to 0
 }
 
@@ -47,12 +47,7 @@ while getopts "v:r:" opt; do
 done
 shift $((OPTIND-1))
 
-# If version wasn't provided with -v, check for a single positional parameter
-if [[ -z "$version" && $# -eq 1 ]]; then
-  version=$1 # Assign the single positional argument as the version
-fi
-
-# Exit if no version was passed via -v or positional parameter
+# Exit if no version was passed via -v
 if [ -z "$version" ]; then
   usage_exit 1
 fi
