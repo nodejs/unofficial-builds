@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Initialize recipes array
-recipes=()
+all_recipes=()
 
 # Location of the recipes directory relative to this script
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -9,9 +9,9 @@ recipes_dir="${__dirname}/../recipes"
 
 get_recipes() {
     # Clear the array to prevent duplication if called multiple times
-    recipes=()
+    all_recipes=()
     for recipe in $(ls ${recipes_dir}/); do
-        recipes+=("$recipe")
+        all_recipes+=("$recipe")
     done
 }
 
