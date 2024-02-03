@@ -12,14 +12,14 @@ fi
 . ${__dirname}/_lock.sh
 
 acquire_lock "build_queue"
-version="$(head -1 $queuefile)"
-if [ "X$version" != "X" ]; then
+version_and_recipes="$(head -1 $queuefile)"
+if [ "X$version_and_recipes" != "X" ]; then
   queuetmp="$(mktemp /tmp/queuefile.XXXX)"
   tail -n +2 $queuefile > $queuetmp
   mv $queuetmp $queuefile
 fi
 release_lock
 
-if [ "X$version" != "X" ]; then
-  echo "$version"
+if [ "X$version_and_recipes" != "X" ]; then
+  echo "$version_and_recipes"
 fi
