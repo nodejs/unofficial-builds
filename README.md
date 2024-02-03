@@ -65,10 +65,8 @@ The build process can be described as:
 ## How to add new target
 
 1. Add target dir in recipe, and ensure that the necessary functions are implemented according to the above process description.
-2. Add target to the recipes list in `bin/_config.sh`.
-3. In order for the `index.dat` and `index.json` to index the new target, you will likely need to modify [nodejs-dist-indexer](https://github.com/nodejs/nodejs-dist-indexer/blob/main/transform-filename.js) so it understands the new filenames.
-4. After a nodejs-dist-indexer release, the new version will need to be listed in `bin/_config.sh`.
-5. Add or modify the README if necessary.
+2. In order for the `index.dat` and `index.json` to index the new target, you will likely need to modify [nodejs-dist-indexer](https://github.com/nodejs/nodejs-dist-indexer/blob/main/transform-filename.js) so it understands the new filenames.
+3. Add or modify the README if necessary.
 
 ## Manual build triggers
 
@@ -77,7 +75,14 @@ Admins with access to the server can manually trigger a build using the [`/bin/q
 ```sh
 su nodejs # perform the action as the "nodejs" user so as to retain proper queue permissions
 cd ~
-unofficial-builds/bin/queue-push.sh v16.4.0 # queue a new build for "v16.4.0" - the "v" is necessary
+unofficial-builds/bin/queue-push.sh -v v16.4.0 # queue a new build for "v16.4.0" - the "v" in the tag is necessary
+```
+
+Optionally it is possible to (re)build recipes for historical versions that are already hosted.  This can be done by adding the `-r` flag to the `queue-push.sh` command. e.g.
+```sh
+su nodejs # perform the action as the "nodejs" user so as to retain proper queue permissions
+cd ~
+unofficial-builds/bin/queue-push.sh -v v16.4.0 -r x64-debug -r musl # will only build the `x64-debug` and `musl` recipes for "v16.4.0"
 ```
 
 This places "v16.4.0" into `~/var/build_queue` which will be read on the next invocation of the build check timer. It may take up to 5 minutes for the build to start, at which point the log should be visible at <https://unofficial-builds.nodejs.org/logs/>.
