@@ -89,10 +89,9 @@ if [[ $GROUP_ID -lt 1000 ]]; then
   echo -e "\e[1mWarning: GID is less than 1000, setting to 1000\e[0m"
 fi
 
-for r in "fetch-source" "${recipe}"; do
-  echo "Building ${r} recipe and tagging as ${image_tag_pfx}${r}..."
-  docker build ${__dirname}/../recipes/${r}/ -t ${image_tag_pfx}${r} --build-arg UID=${USER_ID} --build-arg GID=${GROUP_ID}
-done
+echo "Building ${recipe} recipe and tagging as ${image_tag_pfx}${recipe}..."
+docker build "${__dirname}/../fetch-source/" -t "${image_tag_pfx}fetch-source" --build-arg UID=${USER_ID} --build-arg GID=${GROUP_ID}
+docker build "${__dirname}/../recipes/${recipe}/" -t "${image_tag_pfx}${recipe}" --build-arg UID=${USER_ID} --build-arg GID=${GROUP_ID}
 
 ## -- DOWNLOAD SOURCE -- ##
 
