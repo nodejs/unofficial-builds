@@ -9,7 +9,7 @@ disttypes="release rc"
 
 for disttype in $disttypes; do
   for version in $(${__dirname}/check-releases.sh $disttype); do
-    ${__dirname}/queue-push.sh $version
+    ${__dirname}/queue-push.sh -v $version
   done
 done
 
