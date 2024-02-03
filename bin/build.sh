@@ -4,37 +4,85 @@
 # fetch the source file then build each type of asset using a pre-built
 # docker image.
 
+# Function to display usage and exit
+usage_exit() {
+  echo "Usage: $0 -v version [-r recipe]"
+  exit "${1:-0}" # Exit with provided code or default to 0
+}
+
+
+# Setup file and directory paths
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 workdir=${workdir:-"$__dirname"/../..}
-
-source "${__dirname}/_config.sh"
-
 ccachedir=$(realpath "${workdir}/.ccache")
 stagingdir=$(realpath "${workdir}/staging")
 distdir=$(realpath "${workdir}/download")
 logdir=$(realpath "${workdir}/logs")
 
-if [[ "X${1}" = "X" ]]; then
-  echo "Please supply a Node.js version string"
-  exit 1
-fi
 
-fullversion="$1"
-. ${__dirname}/_decode_version.sh
+# Adds config variable to scope
+source "${__dirname}/_config.sh"
+# get the list of recipes from the recipes directory. Adds `all_recipes` array and 
+# `recipe_exists` function to scope
+source "${__dirname}/_get_recipes.sh"
+# Adds decode function to scope to parse $fullversion below
+source "${__dirname}/_decode_version.sh"
+
+
+# Variable declaration
+fullversion=""
+recipes_to_build=()
+
+
+# Parse options
+while getopts "v:r:" opt; do
+  case $opt in
+    v)
+      fullversion="$OPTARG"
+      ;;
+    r)
+      if ! recipe_exists "$OPTARG"; then
+        echo "Error: Recipe '$OPTARG' does not exist."
+        usage_exit 1
+      fi
+      recipes_to_build+=("$OPTARG")
+      ;;
+    \?) 
+      echo "Invalid option: -$OPTARG" >&2;
+      usage_exit 1
+      ;;
+    :)
+      echo "Invalid option: $OPTARG requires an argument" 1>&2
+      usage_exit
+      ;;
+  esac
+done
+shift $((OPTIND-1))
+
+# Exit if no version was passed via -v
+if [ -z "$fullversion" ]; then
+  usage_exit 1
+fi
+# see _decode_version.sh for all of the magic variables now set and available
+# for use after decoding the $fullversion
 decode "$fullversion"
-# see _decode_version for all of the magic variables now set and available for use
 
 # Point RELEASE_URLBASE to the Unofficial Builds server
 unofficial_release_urlbase="https://unofficial-builds.nodejs.org/download/${disttype}/"
 
+# If no recipes were passed via -r, build all recipes
+if [ ${#recipes_to_build[@]} -eq 0 ]; then
+  recipes_to_build=${all_recipes[@]}
+fi
+
+
+# Setup thislogdir so logs can be placed there. See comment below for more info
 thislogdir="${logdir}/$(date -u +'%Y%m%d%H%M')-${fullversion}"
 mkdir -p $thislogdir
-
 echo "Logging to ${thislogdir}..."
 
 # From here on, all stdout and stderr goes to ${thislogdir}/build.log so we can
 # see it from the web @ unofficial-builds.nodejs.org/logs/
-
 {
 
 echo "Starting build @ $(date)"
@@ -56,7 +104,7 @@ docker run --rm \
   > ${thislogdir}/fetch-source.log 2>&1
 
 # Build all other recipes
-for recipe in $recipes; do
+for recipe in $recipes_to_build; do
   # each recipe has 3 variable components:
   # - individual ~/.ccache directory
   # - a ~/node.tar.xz file that fetch-source has downloaded
