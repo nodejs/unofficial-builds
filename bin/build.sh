@@ -20,11 +20,8 @@ distdir=$(realpath "${workdir}/download")
 logdir=$(realpath "${workdir}/logs")
 
 
-# Adds config variable to scope
+# Adds config variable and `recipe_exists` function to scope
 source "${__dirname}/_config.sh"
-# get the list of recipes from the recipes directory. Adds `all_recipes` array and 
-# `recipe_exists` function to scope
-source "${__dirname}/_get_recipes.sh"
 # Adds decode function to scope to parse $fullversion below
 source "${__dirname}/_decode_version.sh"
 
@@ -72,7 +69,7 @@ unofficial_release_urlbase="https://unofficial-builds.nodejs.org/download/${dist
 
 # If no recipes were passed via -r, build all recipes
 if [ ${#recipes_to_build[@]} -eq 0 ]; then
-  recipes_to_build=("${all_recipes[@]}")
+  recipes_to_build=("${recipes[@]}")
 fi
 
 # Setup thislogdir so logs can be placed there. See comment below for more info
@@ -103,7 +100,7 @@ docker run --rm \
   > ${thislogdir}/fetch-source.log 2>&1
 
 # Build all other recipes
-for recipe in $recipes_to_build; do
+for recipe in "${recipes_to_build[@]}"; do
   # each recipe has 3 variable components:
   # - individual ~/.ccache directory
   # - a ~/node.tar.xz file that fetch-source has downloaded
@@ -113,7 +110,7 @@ for recipe in $recipes_to_build; do
   sourcemount="-v ${sourcefile}:/home/node/node.tar.xz"
   stagingmount="-v ${stagingoutdir}:/out"
 
-  shouldbuild="${__dirname}/../recipes/$recipe/should-build.sh"
+  shouldbuild="${recipes_dir}/$recipe/should-build.sh"
 
   if [ -f "$shouldbuild" ]; then
     if ! "$shouldbuild" "$__dirname" "$fullversion"; then
