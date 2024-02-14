@@ -68,6 +68,7 @@ The build process can be described as:
 2. Add target to the bottom of the recipes list in `bin/_config.sh`.  If the build should be prioritized place the recipe higher up and make note of it in the comments of the PR so there is a record of why the build should happen earlier.
 3. In order for the `index.dat` and `index.json` to index the new target, you will likely need to modify [nodejs-dist-indexer](https://github.com/nodejs/nodejs-dist-indexer/blob/main/transform-filename.js) so it understands the new filenames.
 4. After a nodejs-dist-indexer release, the new version will need to be listed in `bin/_config.sh`.
+5. Add or modify the README if necessary.
 
 ## Manual build triggers
 
