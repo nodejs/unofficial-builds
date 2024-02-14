@@ -65,8 +65,9 @@ The build process can be described as:
 ## How to add new target
 
 1. Add target dir in recipe, and ensure that the necessary functions are implemented according to the above process description.
-2. In order for the `index.dat` and `index.json` to index the new target, you will likely need to modify [nodejs-dist-indexer](https://github.com/nodejs/nodejs-dist-indexer/blob/main/transform-filename.js) so it understands the new filenames.
-3. Add or modify the README if necessary.
+2. Add target to the bottom of the recipes list in `bin/_config.sh`.  If the build should be prioritized place the recipe higher up and make note of it in the comments of the PR so there is a record of why the build should happen earlier.
+3. In order for the `index.dat` and `index.json` to index the new target, you will likely need to modify [nodejs-dist-indexer](https://github.com/nodejs/nodejs-dist-indexer/blob/main/transform-filename.js) so it understands the new filenames.
+4. After a nodejs-dist-indexer release, the new version will need to be listed in `bin/_config.sh`.
 
 ## Manual build triggers
 
@@ -78,7 +79,12 @@ cd ~
 unofficial-builds/bin/queue-push.sh -v v16.4.0 # queue a new build for "v16.4.0" - the "v" in the tag is necessary
 ```
 
-Optionally it is possible to (re)build recipes for historical versions that are already hosted.  This can be done by adding the `-r` flag to the `queue-push.sh` command. e.g.
+Optionally it is possible to (re)build recipes for historical versions that are already hosted.  
+
+**Important:** Be aware the re-building historical releases will change the digest in the SHASUMS. A consistent digest is required by some consumers of builds, so certain recipes should not be rebuilt. Notably those that are used by the [docker-node](https://github.com/nodejs/docker-node) project, such as `musl`. A change in digest will lead to verification errors downstream. If you are unsure, check with other team members.
+
+This can be done by adding the `-r` flag to the `queue-push.sh` command. e.g.
+
 ```sh
 su nodejs # perform the action as the "nodejs" user so as to retain proper queue permissions
 cd ~

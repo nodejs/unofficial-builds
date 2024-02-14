@@ -7,7 +7,7 @@
 
 # Function to display usage and exit
 usage_exit() {
-  echo "Usage: $0 -v version [-r recipe]"
+  echo "Usage: $0 -v version [-r recipe ...]"
   exit "${1:-0}" # Exit with provided code or default to 0
 }
 

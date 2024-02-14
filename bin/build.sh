@@ -6,7 +6,7 @@
 
 # Function to display usage and exit
 usage_exit() {
-  echo "Usage: $0 -v version [-r recipe]"
+  echo "Usage: $0 -v version [-r recipe ...]"
   exit "${1:-0}" # Exit with provided code or default to 0
 }
 
@@ -72,9 +72,8 @@ unofficial_release_urlbase="https://unofficial-builds.nodejs.org/download/${dist
 
 # If no recipes were passed via -r, build all recipes
 if [ ${#recipes_to_build[@]} -eq 0 ]; then
-  recipes_to_build=${all_recipes[@]}
+  recipes_to_build=("${all_recipes[@]}")
 fi
-
 
 # Setup thislogdir so logs can be placed there. See comment below for more info
 thislogdir="${logdir}/$(date -u +'%Y%m%d%H%M')-${fullversion}"
@@ -139,7 +138,7 @@ for recipe in $recipes_to_build; do
   (cd "${distoutdir}" && shasum -a256 $(ls node* 2> /dev/null) > SHASUMS256.txt) || exit 1
   echo "Generating indexes (this may error if there is no upstream tag for this build)"
   # index.json and index.tab
-  npx nodejs-dist-indexer --dist ${distdir_promote} --indexjson ${distdir_promote}/index.json  --indextab ${distdir_promote}/index.tab || true
+  npm --exex -y nodejs-dist-indexer@${dist_indexer_version} -- --dist ${distdir_promote} --indexjson ${distdir_promote}/index.json  --indextab ${distdir_promote}/index.tab || true
 done
 
 echo "Finished build @ $(date)"
