@@ -8,10 +8,12 @@ usage_exit() {
 ## -- SETUP -- ##
 
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# by default, workdir is the parent directory of the cloned repo
-workdir=${workdir:-"$__dirname"/../..}
-
 source "${__dirname}/_config.sh"
+source "${__dirname}/_decode_version.sh"
+
+# by default, workdir is the parent directory of the cloned repo
+workdir="${workdir:-"${__dirname}/../.."}"
+
 
 recipe=""
 fullversion=""
@@ -50,19 +52,18 @@ if [[ -z "$fullversion" ]]; then
 fi
 
 # check that the recipe exists and has a Dockerfile
-if [[ ! -d "${__dirname}/../recipes/${recipe}" ]]; then
+if [[ ! -d "${recipes_dir}/${recipe}" ]]; then
   echo "Recipe ${recipe} does not exist"
   usage_exit
 fi
-if [[ ! -f "${__dirname}/../recipes/${recipe}/Dockerfile" ]]; then
+if [[ ! -f "${recipes_dir}/${recipe}/Dockerfile" ]]; then
   echo "Recipe ${recipe} does not have a Dockerfile"
   usage_exit
 fi
 
-. ${__dirname}/_decode_version.sh
 decode "$fullversion"
 
-workdir=$(realpath "${workdir}")
+workdir="$(realpath "$workdir")"
 stagingdir="${workdir}/staging"
 ccachedir="${workdir}/.ccache"
 sourcedir="${stagingdir}/src/${fullversion}"
@@ -91,15 +92,15 @@ fi
 
 echo "Building ${recipe} recipe and tagging as ${image_tag_pfx}${recipe}..."
 docker build "${__dirname}/../fetch-source/" -t "${image_tag_pfx}fetch-source" --build-arg UID=${USER_ID} --build-arg GID=${GROUP_ID}
-docker build "${__dirname}/../recipes/${recipe}/" -t "${image_tag_pfx}${recipe}" --build-arg UID=${USER_ID} --build-arg GID=${GROUP_ID}
+docker build "${recipes_dir}/${recipe}/" -t "${image_tag_pfx}${recipe}" --build-arg UID=${USER_ID} --build-arg GID=${GROUP_ID}
 
 ## -- DOWNLOAD SOURCE -- ##
 
-if [[ ! -f "${sourcefile}" ]]; then
+if [[ ! -f "$sourcefile" ]]; then
   echo "Downloading source tarball..."
   docker run --rm \
     --user=${USER_ID} \
-    -v ${sourcedir}:/out \
+    -v "${sourcedir}:/out" \
     "${image_tag_pfx}fetch-source" \
     "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url"
   echo "Done, source tarball is at ${sourcefile}"
@@ -116,7 +117,7 @@ ccachemount="-v ${ccachedir}/${recipe}/:/home/node/.ccache/"
 mkdir -p "${ccachedir}/${recipe}"
 docker run --rm \
   --user=${USER_ID} \
-  ${ccachemount} ${sourcemount} ${stagingmount} \
+  "$ccachemount" "$sourcemount" "$stagingmount" \
   "${image_tag_pfx}${recipe}" \
   "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url"
 echo "Successful build should result in assets in ${stagingoutdir}"

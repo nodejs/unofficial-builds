@@ -3,13 +3,12 @@
 # Get the next version to be built off the queue
 
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-queuefile="$(realpath ${__dirname}/../../var/build_queue)"
+source "${__dirname}/_config.sh"
+source "${__dirname}/_lock.sh"
 
 if [ ! -f $queuefile ]; then
   exit 0
 fi
-
-. ${__dirname}/_lock.sh
 
 acquire_lock "build_queue"
 version_and_recipes="$(head -1 $queuefile)"

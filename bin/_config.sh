@@ -23,7 +23,7 @@ image_tag_pfx=unofficial-build-recipe-
 # Location of the recipes directory relative to this script
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 recipes_dir="${__dirname}/../recipes"
-queuefile="$(realpath ${__dirname}/../../var/build_queue)"
+queuefile="$(realpath "${__dirname}/../../var/build_queue")"
 
 recipe_exists() {
   local recipe=$1

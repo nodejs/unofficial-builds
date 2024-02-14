@@ -11,12 +11,11 @@ usage_exit() {
   exit "${1:-0}" # Exit with provided code or default to 0
 }
 
-# Location of the build queue file
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-queuefile="$(realpath ${__dirname}/../../var/build_queue)"
-
-# Adds recipe_exists function to scope
-. ${__dirname}/_get_recipes.sh
+# Bring location of the build queue file into scope
+source "${__dirname}/_config.sh"
+# Bring the lock functions into scope
+source "${__dirname}/_lock.sh"
 
 # Variable declaration
 version=""
@@ -54,19 +53,19 @@ fi
 
 recipes_string="" # No recipes provided, default to all (handled later)
 if [ ${#recipes_to_build[@]} -gt 0 ]; then
+  # Join the array of passed recipes using a comma separator
   recipes_string=$(IFS=,; echo "${recipes_to_build[*]}")
 fi
 
 # Acquire a lock on the build queue
-. ${__dirname}/_lock.sh
 acquire_lock "build_queue"
 
 # Add the version (and optionally recipes) to the queue
 echo "Queuing $version with recipes: ${recipes_string:-"all"}"
 if [[ -n "$recipes_string" ]]; then
-  echo "$version|$recipes_string" >> $queuefile
+  echo "$version|$recipes_string" >> "$queuefile"
 else
-  echo "$version" >> $queuefile
+  echo "$version" >> "$queuefile"
 fi
 
 # Release the lock
