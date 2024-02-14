@@ -6,7 +6,7 @@
 # to ../../var/ so subsequent runs will pick up the difference.
 
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-vardir="$(realpath ${__dirname}/../../var/)"
+vardir="$(realpath "${__dirname}/../../var/")"
 
 disttype="$1"
 if [ "X$disttype" = "X" ]; then

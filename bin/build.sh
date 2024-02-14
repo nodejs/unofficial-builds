@@ -13,7 +13,7 @@ usage_exit() {
 
 # Setup file and directory paths
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-workdir=${workdir:-"$__dirname"/../..}
+workdir=${workdir:-"${__dirname}/../.."}
 ccachedir=$(realpath "${workdir}/.ccache")
 stagingdir=$(realpath "${workdir}/staging")
 distdir=$(realpath "${workdir}/download")
@@ -94,10 +94,10 @@ mkdir -p $distoutdir
 
 # Build fetch-source, needs to be the first and must succeed
 docker run --rm \
-  -v ${sourcedir}:/out \
+  -v "${sourcedir}:/out" \
   "${image_tag_pfx}fetch-source" \
   "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" \
-  > ${thislogdir}/fetch-source.log 2>&1
+  > "${thislogdir}/fetch-source.log" 2>&1
 
 # Build all other recipes
 for recipe in "${recipes_to_build[@]}"; do
@@ -120,24 +120,24 @@ for recipe in "${recipes_to_build[@]}"; do
 
   # each recipe logs to its own log file in the $thislogdir directory
   docker run --rm \
-    ${ccachemount} ${sourcemount} ${stagingmount} \
+    "$ccachemount" "$sourcemount" "$stagingmount" \
     "${image_tag_pfx}${recipe}" \
     "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" \
-    > ${thislogdir}/${recipe}.log 2>&1 || echo "Failed to build recipe for ${recipe}"
+    > "${thislogdir}/${recipe}.log" 2>&1 || echo "Failed to build recipe for ${recipe}"
 
   # Total runtime can be up to 10hr for a full recipe so do promotion and
   # updateing of indexes after each build so dont have to wait for all builds
   # to finish before consumers can use the assets
   #
   # promote all assets in staging
-  mv ${stagingoutdir}/node-v* ${distoutdir}
+  mv "${stagingoutdir}/node-v*" "$distoutdir"
   # generate SHASUM256.txt
-  (cd "${distoutdir}" && shasum -a256 $(ls node* 2> /dev/null) > SHASUMS256.txt) || exit 1
+  (cd "$distoutdir" && shasum -a256 $(ls node* 2> /dev/null) > SHASUMS256.txt) || exit 1
   echo "Generating indexes (this may error if there is no upstream tag for this build)"
   # index.json and index.tab
-  npm --exex -y nodejs-dist-indexer@${dist_indexer_version} -- --dist ${distdir_promote} --indexjson ${distdir_promote}/index.json  --indextab ${distdir_promote}/index.tab || true
+  npm --exex -y nodejs-dist-indexer@${dist_indexer_version} -- --dist "$distdir_promote" --indexjson "${distdir_promote}/index.json"  --indextab "${distdir_promote}/index.tab" || true
 done
 
 echo "Finished build @ $(date)"
 
-} > ${thislogdir}/build.log 2>&1
+} > "${thislogdir}/build.log" 2>&1

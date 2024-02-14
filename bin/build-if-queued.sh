@@ -5,9 +5,9 @@
 # conflicts.
 
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-. ${__dirname}/_lock.sh
-. ${__dirname}/_decode_version.sh
-queuefile="$(realpath ${__dirname}/../../var/build_queue)"
+source "${__dirname}/_config.sh"
+source "${__dirname}/_lock.sh"
+source "${__dirname}/_decode_version.sh"
 
 # quick checks before we bother with locks
 if [ ! -f "$queuefile" ]; then
@@ -22,7 +22,7 @@ exit_if_locked "node-build"
 acquire_lock "node-build"
 
 # next build from the queue
-version_and_recipes="$(${__dirname}/queue-pop.sh)"
+version_and_recipes="$("${__dirname}/queue-pop.sh")"
 
 if [ "X$version_and_recipes" != "X" ]; then
   # split the version and recipes
