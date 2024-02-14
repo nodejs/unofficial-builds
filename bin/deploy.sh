@@ -9,4 +9,4 @@ echo "Deployed! $(date)"
 
 # rebuild images if they need it
 
-${__dirname}/prepare-images.sh
+"${__dirname}/prepare-images.sh"
