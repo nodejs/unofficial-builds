@@ -90,35 +90,38 @@ This repository is primarily intended for use on the unofficial-builds server bu
 
 ### Setup for local builds
 
-On deploy, this repository is placed within a the `unofficial-builds` home directory on the server, it is intended to operate from a subdirectory of where the assets are build, it's `$workdir` is the parent directory of wherever it is located. The `local_build.sh` script will create some directories within its `$workdir` so it's best to create a new directory for it to operate in. e.g.:
+On deploy, this repository is placed within a the `unofficial-builds` home directory, it is intended to operate from a subdirectory of where the assets are build, it's `$workdir` is the parent directory of wherever it is located. The `local_build.sh` script will create some directories within its `$workdir` so it's best to create a new directory for it to operate in. So the steps for local build will be in general:
 
-* `$workdir`
-  * unofficial-builds/ *(this repository)*
-  * staging/src/ *(source files for builds, made by `local_build.sh`)*
-  * staging/`$disttype`/`$version`/ *(staging directory for builds, made by `local_build.sh`)*
-  * .ccache/ *(ccache cache directory to speed up repeat builds, made by `local_build.sh`)*
+* Install docker from [https://docs.docker.com](https://docs.docker.com/engine/install/)
+* Create the `$workdir` directory inside your home as normal user, you will have then:
+  * unofficial-builds/ *(this repository, created after cloned this git, inside `$workdir`)*
+  * staging/src/ *(source files for builds, will be created by `local_build.sh`)*
+  * staging/`$disttype`/`$version`/ *(staging directory for builds, will be created by `local_build.sh`)*
+  * .ccache/ *(ccache cache directory to speed up repeat builds, will be created by `local_build.sh`)*
 
-e.g. clone this repository using the following commands to place it within an `unofficial-builds-home` directory:
+e.g. Login as normal userclone this repository using the following commands to place it within an `unofficial-builds-home` directory:
 
 ```sh
-mkdir unofficial-builds-home
-cd unofficial-builds-home
+rm -fr ~/Devel/unofficial-builds-home
+mkdir -p ~/Devel/unofficial-builds-home
+cd ~/Devel/unofficial-builds-home
 git clone https://github.com/nodejs/unofficial-builds
 ```
 
-However, you can override the default `$workdir` behaviour with a `-w <newdir>` argument to `local_build.sh` and direct it to a different directory where it can create its own subdirectories, so the above layout is not strictly necessary.
-
-Please note that these scripts and recipes are intended to run in a Linux x64 environment, they may not work on other platforms, YMMV.
+In the script presented, the `$workdir` will be `~/Devel/unnofficial-builds-home` and it can be customized with a `-w <newdir>` argument to `local_build.sh`, with the limitation that this script, although they build Nodejs binaries for other platforms, the commands presented will only execute on a 64-bit Linux environment based on x86 cpus. All of those commands are running as a normal user.
 
 ### Building
 
-Once you have cloned this repository, you can build a specific recipe by running `bin/local_build.sh` with the recipe (an existing one or one you create within the `recipes/` subdirectory) name and the Node.js version you want to build. e.g.
+Once you have cloned this repository, you can build a specific recipe by running `bin/local_build.sh` with the recipe (an existing one or one you create within the `recipes/` subdirectory) name and the Node.js version you want to build. e.g. (following previous example commands)
 
 ```sh
-bin/local_build.sh -r musl -v v21.0.0 # build musl binaries for Node.js v21.0.0
+cd ~/Devel/unofficial-builds-home/unofficial-builds
+bin/local_build.sh -r musl -v v21.0.0
 ```
 
-A successful build will place the source in `$workdir/staging/src/` and binaries in `$workdir/staging/release/v21.0.0/`.
+A successful build will place the source in `$workdir/staging/src/` and binaries in `$workdir/staging/release/v21.0.0/` (where `$workdir` currently is `~/Devel/unnofficial-builds-home`). All of those commands are running as a normal user.
+
+You must erase all dockers layers before run a new recibe. Take in considerations that not all recipes can be build in all combinations.
 
 ## Team
 
