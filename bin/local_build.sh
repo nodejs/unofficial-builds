@@ -82,7 +82,12 @@ GROUP_ID=$(id -g)
 # than 1000, so bump to 1000 if that's the case.
 if [[ $USER_ID -lt 1000 ]]; then
   USER_ID=1000
-  echo -e "\e[1mWarning: UID is less than 1000, setting to 1000, output files will be owned by this UID\e[0m"
+  echo -e "\e[1mWarning: UID is less than 1000, setting to 1000, output files will be owned by this UID.\e[0m"
+  echo -e "\e[1mThis may require sudo to delete.\e[0m"
+  echo "Setting permissions to allow write access to staging, source and ccache directories..."
+  chmod -R a+w $sourcedir
+  chmod -R a+w $stagingoutdir
+  chmod -R a+w $ccachedir
 fi
 if [[ $GROUP_ID -lt 1000 ]]; then
   GROUP_ID=1000
