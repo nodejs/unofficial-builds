@@ -121,7 +121,7 @@ bin/local_build.sh -r musl -v v21.0.0
 
 A successful build will place the source in `$workdir/staging/src/` and binaries in `$workdir/staging/release/v21.0.0/` (where `$workdir` currently is `~/Devel/unnofficial-builds-home`). All of those commands are running as a normal user.
 
-You must erase all dockers layers before run a new recibe. Take in considerations that not all recipes can be build in all combinations.
+You must erase all dockers layers before run a new recipe. Take in considerations that not all recipes can be built for all versions.
 
 ## Team
 
