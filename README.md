@@ -99,7 +99,7 @@ On deploy, this repository is placed within a the `unofficial-builds` home direc
   * staging/`$disttype`/`$version`/ *(staging directory for builds, will be created by `local_build.sh`)*
   * .ccache/ *(ccache cache directory to speed up repeat builds, will be created by `local_build.sh`)*
 
-e.g. Login as normal userclone this repository using the following commands to place it within an `unofficial-builds-home` directory:
+e.g. Login as normal user and clone this repository using the following commands to place it within an `unofficial-builds-home` directory:
 
 ```sh
 rm -fr ~/Devel/unofficial-builds-home
