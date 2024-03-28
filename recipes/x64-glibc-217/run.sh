@@ -15,6 +15,13 @@ config_flags=""
 cd /home/node
 
 tar -xf node.tar.xz
+
+# configuring cares correctly to not use sys/random.h on this target
+cd "node-${fullversion}"/deps/cares/config/linux
+sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' ./ares_config.h
+
+cd /home/node
+
 cd "node-${fullversion}"
 
 export CC="ccache gcc"
