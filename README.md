@@ -108,7 +108,7 @@ cd ~/Devel/unofficial-builds-home
 git clone https://github.com/nodejs/unofficial-builds
 ```
 
-In the script presented, the `$workdir` will be `~/Devel/unnofficial-builds-home` and it can be customized with a `-w <newdir>` argument to `local_build.sh`, with the limitation that this script, although they build Nodejs binaries for other platforms, the commands presented will only execute on a 64-bit Linux environment based on x86 cpus. All of those commands are running as a normal user.
+In the script presented, the `$workdir` will be `~/Devel/unofficial-builds-home` and it can be customized with a `-w <newdir>` argument to `local_build.sh`, with the limitation that this script, although they build Nodejs binaries for other platforms, the commands presented will only execute on a 64-bit Linux environment based on x86 cpus. All of those commands are running as a normal user.
 
 ### Building
 
