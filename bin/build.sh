@@ -105,10 +105,10 @@ for recipe in "${recipes_to_build[@]}"; do
   # - individual ~/.ccache directory
   # - a ~/node.tar.xz file that fetch-source has downloaded
   # - an output /out directory that puts generated assets into a staging directory
-  ccachemount="-v ${ccachedir}/${recipe}/:/home/node/.ccache/"
+  ccachemount="${ccachedir}/${recipe}/:/home/node/.ccache/"
   mkdir -p "${ccachedir}/${recipe}"
-  sourcemount="-v ${sourcefile}:/home/node/node.tar.xz"
-  stagingmount="-v ${stagingoutdir}:/out"
+  sourcemount="${sourcefile}:/home/node/node.tar.xz"
+  stagingmount="${stagingoutdir}:/out"
 
   shouldbuild="${recipes_dir}/$recipe/should-build.sh"
 
@@ -120,7 +120,7 @@ for recipe in "${recipes_to_build[@]}"; do
 
   # each recipe logs to its own log file in the $thislogdir directory
   docker run --rm \
-    "$ccachemount" "$sourcemount" "$stagingmount" \
+    -v "$ccachemount" -v "$sourcemount" -v "$stagingmount" \
     "${image_tag_pfx}${recipe}" \
     "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" \
     > "${thislogdir}/${recipe}.log" 2>&1 || echo "Failed to build recipe for ${recipe}"

@@ -111,13 +111,13 @@ fi
 ## -- RUN BUILD -- ##
 
 echo "Building ${recipe} recipe..."
-sourcemount="-v ${sourcefile}:/home/node/node.tar.xz"
-stagingmount="-v ${stagingoutdir}:/out"
-ccachemount="-v ${ccachedir}/${recipe}/:/home/node/.ccache/"
+sourcemount="${sourcefile}:/home/node/node.tar.xz"
+stagingmount="${stagingoutdir}:/out"
+ccachemount="${ccachedir}/${recipe}/:/home/node/.ccache/"
 mkdir -p "${ccachedir}/${recipe}"
 docker run --rm \
   --user=${USER_ID} \
-  "$ccachemount" "$sourcemount" "$stagingmount" \
+  -v "$ccachemount" -v "$sourcemount" -v "$stagingmount" \
   "${image_tag_pfx}${recipe}" \
   "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url"
 echo "Successful build should result in assets in ${stagingoutdir}"
