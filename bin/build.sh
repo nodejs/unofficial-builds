@@ -130,7 +130,7 @@ for recipe in "${recipes_to_build[@]}"; do
   # to finish before consumers can use the assets
   #
   # promote all assets in staging
-  mv "${stagingoutdir}/node-v*" "$distoutdir"
+  mv "${stagingoutdir}"/node-v* "${distoutdir}"
   # generate SHASUM256.txt
   (cd "$distoutdir" && shasum -a256 $(ls node* 2> /dev/null) > SHASUMS256.txt) || exit 1
   echo "Generating indexes (this may error if there is no upstream tag for this build)"
