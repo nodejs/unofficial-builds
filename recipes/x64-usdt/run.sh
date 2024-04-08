@@ -21,6 +21,11 @@ export CC="ccache gcc"
 export CXX="ccache g++"
 export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)
 
+if [ $MAJOR_VERSION -ge 19 ]; then
+  echo 'dtrace support was removed in nodejs v19+ ... exiting'
+  exit 0
+fi
+
 if [ $MAJOR_VERSION -ge 16 ]; then
   . /opt/rh/devtoolset-9/enable
 fi
