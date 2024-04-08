@@ -135,7 +135,7 @@ for recipe in "${recipes_to_build[@]}"; do
   (cd "$distoutdir" && shasum -a256 $(ls node* 2> /dev/null) > SHASUMS256.txt) || exit 1
   echo "Generating indexes (this may error if there is no upstream tag for this build)"
   # index.json and index.tab
-  npm --exec -y nodejs-dist-indexer@${dist_indexer_version} -- --dist "$distdir_promote" --indexjson "${distdir_promote}/index.json"  --indextab "${distdir_promote}/index.tab" || true
+  npm exec nodejs-dist-indexer@${dist_indexer_version} --yes -- --dist "$distdir_promote" --indexjson "${distdir_promote}/index.json"  --indextab "${distdir_promote}/index.tab" || true
 done
 
 echo "Finished build @ $(date)"
