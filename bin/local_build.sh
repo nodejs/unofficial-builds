@@ -8,12 +8,17 @@ usage_exit() {
 ## -- SETUP -- ##
 
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${__dirname}/_config.sh"
-source "${__dirname}/_decode_version.sh"
 
 # by default, workdir is the parent directory of the cloned repo
 workdir="${workdir:-"${__dirname}/../.."}"
 
+# setup needed directories and build queue file to match prod server
+mkdir -p "${__dirname}/../../var"
+touch "${__dirname}/../../var/build_queue"
+
+# include needed config
+source "${__dirname}/_config.sh"
+source "${__dirname}/_decode_version.sh"
 
 recipe=""
 fullversion=""
