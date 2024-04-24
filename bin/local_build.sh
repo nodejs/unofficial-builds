@@ -13,8 +13,8 @@ __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 workdir="${workdir:-"${__dirname}/../.."}"
 
 # setup needed directories and build queue file to match prod server
-mkdir -p "${__dirname}../../../var"
-touch "${__dirname}../../../var/build_queue"
+mkdir -p "${__dirname}/../../var"
+touch "${__dirname}/../../var/build_queue"
 
 # include needed config
 source "${__dirname}/_config.sh"
