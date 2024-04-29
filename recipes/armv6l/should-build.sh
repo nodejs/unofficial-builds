@@ -7,4 +7,5 @@ fullversion=$2
 
 decode "$fullversion"
 
-test "$major" -ge "16"
+# TODO: Re-enable if a compatible compiler can be found
+test "$major" -lt "22"
