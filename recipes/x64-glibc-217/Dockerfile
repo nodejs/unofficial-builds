@@ -7,8 +7,12 @@ RUN groupadd --gid $GID node \
     && adduser --gid $GID --uid $UID node
 
 RUN ulimit -n 1024 \
+    && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* \
+    && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-* \
     && yum install -y epel-release \
     && yum install -y centos-release-scl-rh \
+    && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo \
+    && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo \
     && yum upgrade -y \
     && yum install -y \
          git \
