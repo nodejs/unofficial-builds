@@ -34,7 +34,7 @@ export CC="ccache gcc"
 export CXX="ccache g++"
 export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)
 
-. /opt/rh/devtoolset-11/enable
+. /opt/rh/devtoolset-12/enable
 . /opt/rh/rh-python38/enable
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \

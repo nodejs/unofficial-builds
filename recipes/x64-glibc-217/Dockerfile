@@ -6,6 +6,14 @@ ARG UID=1000
 RUN groupadd --gid $GID node \
     && adduser --gid $GID --uid $UID node
 
+RUN cat <<EOF | tee -a /etc/yum.repos.d/devtoolset-12.repo
+[devtoolset-12]
+name=Devtoolset 12
+baseurl=https://buildlogs.centos.org/c7-devtoolset-12.x86_64/
+enabled=1
+gpgcheck=0
+EOF
+
 RUN ulimit -n 1024 \
     && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* \
     && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-* \
@@ -22,7 +30,7 @@ RUN ulimit -n 1024 \
          rh-python38 \
          ccache \
          xz-utils \
-         devtoolset-11 \
+         devtoolset-12 \
          glibc-devel
 
 COPY --chown=node:node run.sh /home/node/run.sh
