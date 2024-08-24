@@ -22,7 +22,7 @@ RUN ulimit -n 1024 \
          rh-python38 \
          ccache \
          xz-utils \
-         devtoolset-9 \
+         devtoolset-11 \
          glibc-devel
 
 COPY --chown=node:node run.sh /home/node/run.sh
