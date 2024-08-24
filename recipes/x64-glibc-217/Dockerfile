@@ -19,7 +19,7 @@ RUN ulimit -n 1024 \
          curl \
          make \
          python2 \
-         python3 \
+         rh-python38 \
          ccache \
          xz-utils \
          devtoolset-9 \
