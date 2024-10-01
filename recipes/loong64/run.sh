@@ -17,8 +17,8 @@ cd /home/node
 tar -xf node.tar.xz
 cd "node-${fullversion}"
 
-export CC_host="ccache gcc-13"
-export CXX_host="ccache g++-13"
+export CC_host="ccache gcc-9"
+export CXX_host="ccache g++-9"
 export CC="ccache /opt/cross-tools/bin/loongarch64-unknown-linux-gnu-gcc"
 export CXX="ccache /opt/cross-tools/bin/loongarch64-unknown-linux-gnu-g++"
 
