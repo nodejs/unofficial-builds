@@ -96,7 +96,7 @@ mkdir -p $distoutdir
 docker run --rm \
   -v "${sourcedir}:/out" \
   "${image_tag_pfx}fetch-source" \
-  "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" \
+  "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" "$source_urlbase" \
   > "${thislogdir}/fetch-source.log" 2>&1
 
 # Build all other recipes
@@ -122,7 +122,7 @@ for recipe in "${recipes_to_build[@]}"; do
   docker run --rm \
     -v "$ccachemount" -v "$sourcemount" -v "$stagingmount" \
     "${image_tag_pfx}${recipe}" \
-    "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" \
+    "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" "$source_urlbase" \
     > "${thislogdir}/${recipe}.log" 2>&1 || echo "Failed to build recipe for ${recipe}"
 
   # Total runtime can be up to 10hr for a full recipe so do promotion and

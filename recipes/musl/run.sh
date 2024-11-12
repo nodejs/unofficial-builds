@@ -9,6 +9,7 @@ datestring="$4"
 commit="$5"
 fullversion="$6"
 source_url="$7"
+source_urlbase="$8"
 config_flags=
 
 cd /home/node

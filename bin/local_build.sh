@@ -107,7 +107,7 @@ if [[ ! -f "$sourcefile" ]]; then
     --user=${USER_ID} \
     -v "${sourcedir}:/out" \
     "${image_tag_pfx}fetch-source" \
-    "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url"
+    "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" "$source_urlbase"
   echo "Done, source tarball is at ${sourcefile}"
 else
   echo "Source tarball already exists at ${sourcefile}, skipping download"
@@ -124,5 +124,5 @@ docker run --rm \
   --user=${USER_ID} \
   -v "$ccachemount" -v "$sourcemount" -v "$stagingmount" \
   "${image_tag_pfx}${recipe}" \
-  "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url"
+  "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" "$source_urlbase"
 echo "Successful build should result in assets in ${stagingoutdir}"
