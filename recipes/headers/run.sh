@@ -9,6 +9,7 @@ datestring="$4"
 commit="$5"
 fullversion="$6"
 source_url="$7"
+source_urlbase="$8"
 config_flags=
 
 cd /home/node
@@ -21,11 +22,11 @@ for key in ${gpg_keys}; do
       gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
 done
 
-curl -fsSLO --compressed "${source_url}/../node-${fullversion}-headers.tar.gz"
-curl -fsSLO --compressed "${source_url}/../node-${fullversion}-headers.tar.xz"
+curl -fsSLO --compressed "${source_urlbase}/node-${fullversion}-headers.tar.gz"
+curl -fsSLO --compressed "${source_urlbase}/node-${fullversion}-headers.tar.xz"
 
 if [[ "$disttype" = "release" ]]; then
-  curl -fsSLO --compressed "${source_url}/../SHASUMS256.txt.asc"
+  curl -fsSLO --compressed "${source_urlbase}/SHASUMS256.txt.asc"
   gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc
   grep " node-${fullversion}-headers.tar.*\$" SHASUMS256.txt | sha256sum -c -
 fi
