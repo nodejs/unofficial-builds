@@ -12,6 +12,7 @@ _**This project is experimental: its output is not guaranteed to remain consiste
 * [Local use](#local-use)
   * [Setup for local builds](#setup-for-local-builds)
   * [Building](#building)
+* [Local installation](#local-installation)
 * [Team](#team)
 * [Emeritus](#emeritus)
 
@@ -134,6 +135,29 @@ bin/local_build.sh -r musl -v v21.0.0
 A successful build will place the source in `$workdir/staging/src/` and binaries in `$workdir/staging/release/v21.0.0/` (where `$workdir` currently is `~/Devel/unnofficial-builds-home`). All of those commands are running as a normal user.
 
 You must erase all dockers layers before run a new recipe. Take in considerations that not all recipes can be built for all versions.
+
+## Local installation
+
+https://unofficial-builds.nodejs.org/download/ hosts compressed archives that may be downloaded and installed by end-users. Each downloadable archive contains bin/, include/, lib/, share/ directories. There are different ways to install nodejs from the compressed files. Choose one of these methods below.
+
+For frequent production use, please mirror the executables to your own servers.  
+
+1. Manually unzip the archive into /usr/local/, thereby creating the various directories such as bin/, lib/, etc. (Note that this will include extraneous files at the top-level, including CHANGELOG.md, README.md and LICENSE).  
+or  
+2. Github Actions example: https://github.com/dixyes/ghactionsplay/blob/main/.github/workflows/glibc217node20.yml  
+or  
+3. (experimental). Download install-node.sh from https://gist.github.com/rvagg/742f811be491a49ba0b9 . Examine and modify the script as needed. Contributions are welcome. The script could be added to this repository in the future.  
+or  
+4. (experimental). `nvm` method. The general idea with `nvm` is this will install the software:
+```
+NVM_NODEJS_ORG_MIRROR=https://unofficial-builds.nodejs.org/download/release nvm install 12
+```
+However, `nvm` is looking for an exactly named file which it may not always find.  
+`node-v20.9.0-linux-x64.tar.gz` instead of `node-v20.9.0-linux-x64-glibc-217.tar.gz`.
+Therefore a possible idea is to create a mirror of https://unofficial-builds.nodejs.org/download/release such as https://www.example.com/download/release, including files index.json and index.tab. Rename archives in the mirror so `nvm` will recognize them. For example, copy `node-v20.9.0-linux-x64-glibc-217.tar.gz` to `node-v20.9.0-linux-x64.tar.gz`. Then an installation would succeed:  
+```
+NVM_NODEJS_ORG_MIRROR=https://www.example.com/download/release nvm install v20.9.0 
+```
 
 ## Team
 
