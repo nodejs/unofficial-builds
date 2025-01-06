@@ -21,7 +21,7 @@ RUN apt-get update \
          ccache \
          xz-utils
 
-RUN curl -L https://github.com/loongson/build-tools/releases/download/2022.09.06/loongarch64-clfs-7.3-cross-tools-gcc-glibc.tar.xz | tar xJf - -C /opt
+RUN curl -L https://github.com/loongson/build-tools/releases/download/2024.11.01/x86_64-cross-tools-loongarch64-binutils_2.43.1-gcc_14.2.0-glibc_2.40.tar.xz | tar xJf - -C /opt
 
 COPY --chown=node:node run.sh /home/node/run.sh
 
