@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+curl_with_retry()
+{
+  URL=$1
+  echo "Fetching $URL"
+  for ((i=1;i<=7;i++)); do
+    if curl -fsSLO --compressed "$URL"; then
+      break
+    else
+      echo "Curl failed with status $?. Retrying in 10 seconds..."
+      sleep 10
+    fi
+  done
+}
+
 set -x
 set -e
 
@@ -24,17 +38,10 @@ for key in ${gpg_keys}; do
 done
 
 # Curl with retry
-for ((i=1;i<=7;i++)); do
-  if curl -fsSLO --compressed "$source_url"; then
-    break
-  else
-    echo "Curl failed with status $?. Retrying in 10 seconds..."
-    sleep 10
-  fi
-done
+curl_with_retry "$source_url"
 
 if [[ "$disttype" = "release" ]]; then
-  curl -fsSLO --compressed "${source_urlbase}/SHASUMS256.txt.asc"
+  curl_with_retry "${source_urlbase}/SHASUMS256.txt.asc"
   gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc
   grep " node-${fullversion}.tar.xz\$" SHASUMS256.txt | sha256sum -c -
 fi
