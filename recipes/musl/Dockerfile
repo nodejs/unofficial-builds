@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.21
 
 ARG GID=1000
 ARG UID=1000
@@ -10,7 +10,6 @@ RUN apk add --no-cache \
         libstdc++ \
     && apk add --no-cache --virtual .build-deps \
         bash \
-        binutils-gold \
         curl \
         g++ \
         gcc \
