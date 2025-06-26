@@ -103,7 +103,7 @@ docker build "${recipes_dir}/${recipe}/" -t "${image_tag_pfx}${recipe}" --build-
 
 if [[ ! -f "$sourcefile" ]]; then
   echo "Downloading source tarball..."
-  chown -R "$USER_ID:$GROUP_ID" "$sourcedir"
+  chown -R "$USER_ID:$GROUP_ID" "$sourcedir" 2>/dev/null || true
   docker run --rm \
     --user=${USER_ID} \
     -v "${sourcedir}:/out" \
@@ -121,7 +121,7 @@ sourcemount="${sourcefile}:/home/node/node.tar.xz"
 stagingmount="${stagingoutdir}:/out"
 ccachemount="${ccachedir}/${recipe}/:/home/node/.ccache/"
 mkdir -p "${ccachedir}/${recipe}"
-chown -R "$USER_ID:$GROUP_ID" "$ccachedir/$recipe" "$stagingoutdir"
+chown -R "$USER_ID:$GROUP_ID" "$ccachedir/$recipe" "$stagingoutdir" 2>/dev/null || true
 docker run --rm \
   --user=${USER_ID} \
   -v "$ccachemount" -v "$sourcemount" -v "$stagingmount" \
