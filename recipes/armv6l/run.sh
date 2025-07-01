@@ -26,10 +26,10 @@ cd /home/node
 
 cd "node-${fullversion}"
 
-export CC_host="ccache gcc-8 -m32"
-export CXX_host="ccache g++-8 -m32"
-export CC="ccache /opt/rpi-newer-crosstools/x64-gcc-8.3.0/arm-rpi-linux-gnueabihf/bin/arm-rpi-linux-gnueabihf-gcc -march=armv6zk"
-export CXX="ccache /opt/rpi-newer-crosstools/x64-gcc-8.3.0/arm-rpi-linux-gnueabihf/bin/arm-rpi-linux-gnueabihf-g++ -march=armv6zk"
+export CC_host="ccache gcc-12 -m32"
+export CXX_host="ccache g++-12 -m32"
+export CC="ccache /opt/rpi-newer-crosstools/x64-gcc-12.3.0-glibc-2.28/arm-rpi-linux-gnueabihf/bin/arm-rpi-linux-gnueabihf-gcc -march=armv6zk"
+export CXX="ccache /opt/rpi-newer-crosstools/x64-gcc-12.3.0-glibc-2.28/arm-rpi-linux-gnueabihf/bin/arm-rpi-linux-gnueabihf-g++ -march=armv6zk"
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="arm" \
