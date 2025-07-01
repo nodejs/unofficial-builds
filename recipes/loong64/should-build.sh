@@ -7,4 +7,8 @@ fullversion=$2
 
 decode "$fullversion"
 
-test "$major" -ge "18" && test "$major" -lt "22"
+(test "$major" -eq "18" && test "$minor" -ge "18") || \
+(test "$major" -eq "20" && test "$minor" -ge "10") || \
+(test "$major" -eq "21") || \
+(test "$major" -eq "22" && test "$minor" -ge "14") || \
+(test "$major" -ge "23")
