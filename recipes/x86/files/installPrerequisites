@@ -1,0 +1,16 @@
+#!/bin/bash -eux
+
+sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+yum upgrade -y
+
+yum install -y bzip2             # Required to compile gcc
+yum install -y zlib-devel        # Required to compile Python
+yum install -y bzip2-devel       # Required to compile Python with bz2 module (required by Node.js)
+yum install -y gcc-c++           # Required to compile Node.js v7-
+yum install -y make              # Allows compilation
+yum install -y ccache            # Allows caching
+yum install -y devtoolset-9.i686 # Includes gcc 9.3.1
+
+# Fix bugs
+sed -i -e 's/:\${MANPATH}/\${MANPATH:+:\${MANPATH}}/g' /opt/rh/devtoolset-9/enable

@@ -1,0 +1,4 @@
+[devtoolset-12]
+name=Devtoolset 12
+baseurl=https://buildlogs.centos.org/c7-devtoolset-12.x86_64/
+gpgcheck=0

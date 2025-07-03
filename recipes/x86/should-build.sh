@@ -7,4 +7,5 @@ fullversion=$2
 
 decode "$fullversion"
 
-test "$major" -lt "22"
+[ "$major" -ge 7 ] || ( [ "$major" -eq 6 ] && [ "$minor" -ge 2 ] )
+[[ ! "$fullversion" =~ ^v22\.[0-2]\. ]]
