@@ -8,3 +8,5 @@ fullversion=$2
 decode "$fullversion"
 
 [ "$major" -ge 14 ] || ( [ "$major" -eq 13 ] && [ "$minor" -ge 4 ] )
+[ "$major" -ne 20 ] || [ "$minor" -le 16 ]
+[ "$major" -ne 23 ] || [ "$minor" -le 7 ]
