@@ -10,6 +10,6 @@ setPython() {
 
 setGCC() {
 	if isNodeVersionGE 'v22.3';  then source /opt/gcc15/enable;            return;  fi  # GCC 15.1:  Node.js v22.3 ~ latest (v24.3)
-	if isNodeVersionGE 'v8.0';   then source /opt/rh/devtoolset-12/enable; return;  fi  # GCC 12.1:  Node.js v8.0  ~ v22.2
+	if isNodeVersionGE 'v8.0';   then source /opt/rh/devtoolset-12/enable; return;  fi  # GCC 12.1:  Node.js v8.0  ~ v22.1
 	                                                                                    # GCC 4.8.5: Node.js v4.0  ~ v10.14
 }
