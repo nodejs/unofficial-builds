@@ -44,7 +44,7 @@ cd "$nodeDir/deps/v8/src"
 export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)
 
 isNodeVersionGE() {
-	printf "$2\n$fullversion" | sort -VC
+	printf "$1\n$fullversion" | sort -VC
 }
 
 source "$homeDir/run_other.sh"
