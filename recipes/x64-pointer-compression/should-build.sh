@@ -7,7 +7,8 @@ fullversion=$2
 
 decode "$fullversion"
 
-[ "$major" -ge 14 ] || ( [ "$major" -eq 13 ] && [ "$minor" -ge 4 ] )
-[ "$major" -ne 20 ] || [ "$minor" -le 16 ]
-[ "$major" -ne 23 ]
-[[ ! "$fullversion" =~ ^v24\.[0-1]\. ]]
+[ "$major" -ge 14 ] || ( [ "$major" -eq 13 ] && [ "$minor" -ge 4 ] )  # Pointer compression is supported since Node.js v13.4
+[ "$major" -ne 17 ]                                                   # Not supported neigher by GCC 12.1 nor GCC 4.8.5 (works with GCC 9.3)
+[ "$major" -ne 20 ] || [ "$minor" -le 16 ]                            # Pointer compression does not work in Node.js v20.17~v20.19
+[ "$major" -ne 23 ]                                                   # Pointer compression does not work in Node.js v23.0~v24.1
+[[ ! "$fullversion" =~ ^v24\.[0-1]\. ]]                               # Pointer compression does not work in Node.js v23.0~v24.1
