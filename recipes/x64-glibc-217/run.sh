@@ -72,5 +72,5 @@ make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   RELEASE_URLBASE="$release_urlbase" \
   CONFIG_FLAGS="$config_flags"
 
-"$nodeDir/node" -p process.versions
+"$nodeDir/node" -p process.versions  # Make sure there is no "Segmentation fault" error  (example: node v21.0~v21.2 x64-pointer-compression)
 mv node-*.tar.?z /out/
