@@ -3,10 +3,14 @@
 __dirname=$1
 fullversion=$2
 
-. ${__dirname}/_decode_version.sh
+isNodeVersionGE() {
+	printf "$1\n$fullversion" | sort -VC
+}
 
-decode "$fullversion"
+isNodeVersionLT() {
+	! printf "$1\n$fullversion" | sort -VC
+}
 
-[ "$major" -ge 7 ] || ( [ "$major" -eq 6 ] && [ "$minor" -ge 2 ] )  # Node.js v6.1- cannot download required files due to broken links
+isNodeVersionGE 'v6.2'                                      # Node.js v6.1- cannot download required files due to broken links
 
-[[ ! "$fullversion" =~ ^v22\.[0-2]\. ]]                             # GCC version between 9.3 and 15.1 is required but not installed
+! ( isNodeVersionGE 'v22.0'  && isNodeVersionLT 'v22.3'  )  # GCC version between 9.3 and 15.1 is required but not installed
