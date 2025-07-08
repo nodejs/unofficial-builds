@@ -1,0 +1,15 @@
+#!/bin/bash -eux
+
+DIR=/opt/gcc15
+
+source /opt/rh/devtoolset-12/enable
+
+export            PATH="$DIR/bin${PATH:+:${PATH}}"
+export         MANPATH="$DIR/share/man${MANPATH:+:${MANPATH}}"
+export        INFOPATH="$DIR/share/info${INFOPATH:+:${INFOPATH}}"
+export LD_LIBRARY_PATH="$DIR/lib64:$DIR/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+export PKG_CONFIG_PATH="$DIR/lib64/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}"
+
+if [ -f "$DIR/bin/gcc" ]; then
+	export LDFLAGS='-static-libstdc++'
+fi
