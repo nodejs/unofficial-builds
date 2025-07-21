@@ -18,10 +18,10 @@ cd /home/node
 tar -xf node.tar.xz
 cd "node-${fullversion}"
 
-export CC_host="ccache gcc-9"
-export CXX_host="ccache g++-9"
-export CC="ccache /opt/riscv_toolchain_linux/bin/riscv64-unknown-linux-gnu-gcc"
-export CXX="ccache /opt/riscv_toolchain_linux/bin/riscv64-unknown-linux-gnu-g++"
+export CC_host="ccache gcc-13"
+export CXX_host="ccache g++-13"
+export CC="ccache /usr/bin/riscv64-linux-gnu-gcc-14"
+export CXX="ccache /usr/bin/riscv64-linux-gnu-g++-14"
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="riscv64" \
