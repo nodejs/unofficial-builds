@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 ARG GID=1000
 ARG UID=1000
@@ -14,10 +14,10 @@ RUN apt-get update \
     && apt-get install -y \
          git \
          curl \
-         g++-8 \
-         gcc-8 \
-         gcc-8-multilib \
-         g++-8-multilib \
+         g++-12 \
+         gcc-12 \
+         gcc-12-multilib \
+         g++-12-multilib \
          make \
          python3 \
          python3-distutils \
