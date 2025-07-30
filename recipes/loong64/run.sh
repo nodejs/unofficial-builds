@@ -22,6 +22,7 @@ export CC_host="ccache gcc-13"
 export CXX_host="ccache g++-13"
 export CC="ccache /usr/bin/loongarch64-linux-gnu-gcc-14"
 export CXX="ccache /usr/bin/loongarch64-linux-gnu-g++-14"
+export PYTHON="python3.10"
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="loong64" \

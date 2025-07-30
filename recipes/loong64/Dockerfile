@@ -23,7 +23,10 @@ RUN apt-get update \
          gcc-14-loongarch64-linux-gnu
 
 RUN addgroup --gid $GID node \
-    && adduser --gid $GID --uid $UID --disabled-password --gecos node node
+    || groupmod -n node ubuntu
+
+RUN adduser --gid $GID --uid $UID --disabled-password --gecos node node \
+    || usermod -l node ubuntu
 
 RUN rm -f /usr/bin/python3
 RUN ln -s /usr/bin/python3.10 /usr/bin/python3
