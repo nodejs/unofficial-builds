@@ -31,7 +31,7 @@ This list of officially supported platforms is available in the Node.js [BUILDIN
  * **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/) version 1.1.20. Primarily useful for users of Alpine Linux 3.9 and later. Linux x64 with musl is considered "Experimental" by Node.js but the Node.js test infrastructure includes some Alpine test servers so support is generally good. These Node.js builds require the `libstdc++` package to be installed on Alpine Linux, which is not installed by default. You can add this by running `apk add libstdc++`.
  * **linux-x64-glibc-217**: Linux x64, compiled with glibc 2.17 to support [older Linux distros](https://en.wikipedia.org/wiki/Glibc#Version_history), QNAP QTS 4.x and 5.x, and Synology DSM 7, and other environments where a newer glibc is unavailable.
  * **linux-x86**: Linux x86 (32-bit) binaries compiled against libc 2.17, similar to the way the official [linux-x64 binaries are produced](https://github.com/nodejs/node/blob/main/BUILDING.md#official-binary-platforms-and-toolchains). 32-bit Linux binaries were dropped for Node.js 10 and 32-bit support is now considered "Experimental".
- * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 16.04 with a [custom GCC 6 toolchain](https://github.com/rvagg/rpi-newer-crosstools) (for Node.js versions earlier than 16) or Ubuntu 18.04 with a [custom GCC 8 toolchain](https://github.com/rvagg/rpi-newer-crosstools) (for Node.js 16 and later) in a similar manner to the official linux-armv7l binaries. Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular). ARMv6 binaries were dropped from Node.js 12 and ARMv6 support is now considered "Experimental".
+ * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 22.04 with a [custom GCC 12 toolchain](https://github.com/rvagg/rpi-newer-crosstools) (for Node.js 16 and later) in a similar manner to the official linux-armv7l binaries. Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular). ARMv6 binaries were dropped from Node.js 12 and ARMv6 support is now considered "Experimental".
  * **riscv64**: Linux riscv64 (RISC-V), cross compiled on Ubuntu 20.04 with the toolchain which the Adoptium project uses (for  now...). Built with --openssl-no-asm (Should be with --with-intl=none but that gets overriden)
  * **loong64**: Linux loong64 (LoongArch64), cross compiled on Ubuntu 20.04 with the toolchain.
 
@@ -81,7 +81,7 @@ cd ~
 unofficial-builds/bin/queue-push.sh -v v16.4.0 # queue a new build for "v16.4.0" - the "v" in the tag is necessary
 ```
 
-Optionally it is possible to (re)build recipes for historical versions that are already hosted.  
+Optionally it is possible to (re)build recipes for historical versions that are already hosted.
 
 **Important:** Be aware the re-building historical releases will change the digest in the SHASUMS. A consistent digest is required by some consumers of builds, so certain recipes should not be rebuilt. Notably those that are used by the [docker-node](https://github.com/nodejs/docker-node) project, such as `musl`. A change in digest will lead to verification errors downstream. If you are unsure, check with other team members.
 
@@ -140,23 +140,23 @@ You must erase all dockers layers before run a new recipe. Take in consideration
 
 https://unofficial-builds.nodejs.org/download/ hosts compressed archives that may be downloaded and installed by end-users. Each downloadable archive contains bin/, include/, lib/, share/ directories. There are different ways to install nodejs from the compressed files. Choose one of these methods below.
 
-For frequent production use, please mirror the executables to your own servers.  
+For frequent production use, please mirror the executables to your own servers.
 
-1. Manually unzip the archive into /usr/local/, thereby creating the various directories such as bin/, lib/, etc. (Note that this will include extraneous files at the top-level, including CHANGELOG.md, README.md and LICENSE).  
-or  
-2. Github Actions example: https://github.com/dixyes/ghactionsplay/blob/main/.github/workflows/glibc217node20.yml  
-or  
-3. (experimental). Download install-node.sh from https://gist.github.com/rvagg/742f811be491a49ba0b9 . Examine and modify the script as needed. Contributions are welcome. The script could be added to this repository in the future.  
-or  
+1. Manually unzip the archive into /usr/local/, thereby creating the various directories such as bin/, lib/, etc. (Note that this will include extraneous files at the top-level, including CHANGELOG.md, README.md and LICENSE).
+or
+2. Github Actions example: https://github.com/dixyes/ghactionsplay/blob/main/.github/workflows/glibc217node20.yml
+or
+3. (experimental). Download install-node.sh from https://gist.github.com/rvagg/742f811be491a49ba0b9 . Examine and modify the script as needed. Contributions are welcome. The script could be added to this repository in the future.
+or
 4. (experimental). `nvm` method. The general idea with `nvm` is this will install the software:
 ```
 NVM_NODEJS_ORG_MIRROR=https://unofficial-builds.nodejs.org/download/release nvm install 12
 ```
-However, `nvm` is looking for an exactly named file which it may not always find.  
+However, `nvm` is looking for an exactly named file which it may not always find.
 `node-v20.9.0-linux-x64.tar.gz` instead of `node-v20.9.0-linux-x64-glibc-217.tar.gz`.
-Therefore a possible idea is to create a mirror of https://unofficial-builds.nodejs.org/download/release such as https://www.example.com/download/release, including files index.json and index.tab. Rename archives in the mirror so `nvm` will recognize them. For example, copy `node-v20.9.0-linux-x64-glibc-217.tar.gz` to `node-v20.9.0-linux-x64.tar.gz`. Then an installation would succeed:  
+Therefore a possible idea is to create a mirror of https://unofficial-builds.nodejs.org/download/release such as https://www.example.com/download/release, including files index.json and index.tab. Rename archives in the mirror so `nvm` will recognize them. For example, copy `node-v20.9.0-linux-x64-glibc-217.tar.gz` to `node-v20.9.0-linux-x64.tar.gz`. Then an installation would succeed:
 ```
-NVM_NODEJS_ORG_MIRROR=https://www.example.com/download/release nvm install v20.9.0 
+NVM_NODEJS_ORG_MIRROR=https://www.example.com/download/release nvm install v20.9.0
 ```
 
 ## Team

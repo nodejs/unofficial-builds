@@ -1,27 +1,32 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 ARG GID=1000
 ARG UID=1000
-
-RUN addgroup --gid $GID node \
-    && adduser --gid $GID --uid $UID --disabled-password --gecos node node
 
 RUN apt-get update \
     && apt-get dist-upgrade -y \
     && apt-get install -y software-properties-common \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+    && add-apt-repository -y ppa:deadsnakes/ppa \
     && apt-get update \
     && apt-get install -y \
+         adduser \
          git \
-	 g++-9 \
+	     g++-13 \
          curl \
          make \
-         python3 \
-	 python3-distutils \
+         python3.10 \
          ccache \
-         xz-utils
+         xz-utils \
+         gcc-14-riscv64-linux-gnu \
+         g++-14-riscv64-linux-gnu \
+         gcc-14-riscv64-linux-gnu-base
 
-RUN curl https://ci.adoptium.net/userContent/riscv/riscv_toolchain_linux64.tar.xz | tar xJf - -C /opt
+RUN (addgroup --gid $GID node || groupmod -n node $(getent group $GID | cut -d: -f1)) \
+    && (adduser --gid $GID --uid $UID --disabled-password --gecos "" node || usermod -l node -g $GID -d /home/node -m $(getent passwd $UID | cut -d: -f1))
+    
+RUN rm -f /usr/bin/python3
+RUN ln -s /usr/bin/python3.10 /usr/bin/python3
 
 COPY --chown=node:node run.sh /home/node/run.sh
 
