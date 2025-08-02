@@ -8,6 +8,7 @@ recipes=(
   "x64-pointer-compression"
   "x64-usdt"
   "riscv64"
+  "riscv64-native"
   "loong64"
   "x64-debug"
 )
