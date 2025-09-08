@@ -1,0 +1,4 @@
+[epel]
+name=epel
+baseurl=https://buildlogs.centos.org/c7-epel.i386/
+gpgcheck=0

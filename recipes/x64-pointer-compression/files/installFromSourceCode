@@ -1,0 +1,36 @@
+#!/bin/bash -eux
+
+# Calc vars
+
+ id="$1"
+url="$2"
+configureArgsStr="$3"
+
+base=$(basename "$url")
+name=${base%.*}
+name=${name%.tar}
+ ext=${base:${#name}}
+
+case "$ext" in
+  .tar.xz|.txz)   formatOpt=--xz;;
+  .tar.gz|.tgz)   formatOpt=--gzip;;
+  .tar.bz2|.tbz2) formatOpt=--bzip2;;
+  *)              formatOpt=--auto-compress
+esac
+
+# Run commands
+
+curl -fL "$url" | tar --extract --directory=/usr/src "$formatOpt"
+
+source /opt/gcc15/enable
+export CC='ccache gcc'
+export CXX='ccache g++'
+
+cd "/usr/src/$name"
+chmod +x ./contrib/download_prerequisites 2>/dev/null && ./contrib/download_prerequisites
+./configure $configureArgsStr
+make -j $(nproc)
+make install
+
+hash -r
+ccache -s > "/root/ccacheStat_$name.txt"
