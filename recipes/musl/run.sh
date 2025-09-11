@@ -10,7 +10,14 @@ commit="$5"
 fullversion="$6"
 source_url="$7"
 source_urlbase="$8"
-config_flags=
+config_flags=""
+
+alpineArch="$(apk --print-arch)"
+case "${alpineArch##*-}" in
+  riscv64|loongarch64)
+    config_flags+="--openssl-no-asm"
+    ;;
+esac
 
 cd /home/node
 
@@ -21,8 +28,6 @@ export CC="ccache gcc"
 export CXX="ccache g++"
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
-  DESTCPU="x64" \
-  ARCH="x64" \
   VARIATION="musl" \
   DISTTYPE="$disttype" \
   CUSTOMTAG="$customtag" \
