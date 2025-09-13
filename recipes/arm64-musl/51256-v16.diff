@@ -1,0 +1,29 @@
+diff --git a/configure.py b/configure.py
+index ce41bff4d3f..7dd9d14b431 100755
+--- a/configure.py
++++ b/configure.py
+@@ -1259,10 +1259,6 @@ def configure_node(o):
+
+   o['variables']['want_separate_host_toolset'] = int(cross_compiling)
+
+-  # Enable branch protection for arm64
+-  if target_arch == 'arm64':
+-    o['cflags']+=['-msign-return-address=all']
+-
+   if options.node_snapshot_main is not None:
+     if options.shared:
+       # This should be possible to fix, but we will need to refactor the
+diff --git a/node.gyp b/node.gyp
+index de409a31f38..86c54a9dac7 100644
+--- a/node.gyp
++++ b/node.gyp
+@@ -111,6 +111,9 @@
+     },
+
+     'conditions': [
++      ['target_arch=="arm64"', {
++        'cflags': ['-mbranch-protection=standard'],  # Pointer authentication.
++      }],
+       ['OS=="aix"', {
+         'ldflags': [
+           '-Wl,-bnoerrmsg',

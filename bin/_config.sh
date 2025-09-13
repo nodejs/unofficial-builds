@@ -10,6 +10,7 @@ recipes=(
   "riscv64"
   "loong64"
   "x64-debug"
+  "arm64-musl"
 )
 
 
