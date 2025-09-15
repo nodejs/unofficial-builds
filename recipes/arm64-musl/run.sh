@@ -51,14 +51,6 @@ if [ "$major" == "16" ] ; then
   patch -d tools -p1 < /home/node/2888.diff
 fi
 
-# Patch needed to support compilation of Node 22 using musl
-# @see https://github.com/nodejs/node/issues/55596#issuecomment-2451411974
-# Although the GCC version in Alpine 3.22 is 14, The musl toolchain used is compiled using 11.2 (see https://musl.cc/)
-# recompiling musl is a step too far, so we add a simple patch that allows us to compile v22
-if [ "$major" == "22" ]; then
-  patch -p1 < /home/node/55596.diff
-fi
-
 export CC_host="ccache gcc"
 export CXX_host="ccache g++"
 export CC="ccache /opt/aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc"

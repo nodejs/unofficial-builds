@@ -23,14 +23,25 @@ RUN apk add --no-cache \
         xz \
         patch \
         # this is required to support building v16 on python 3.12
-        py3-packaging
+        py3-packaging \
+        # extra packages required for creating the musl bases cross-compiler 
+        rsync make gcc g++ bzip2 git
 
-RUN cd /opt \
-    && curl -O https://musl.cc/aarch64-linux-musl-cross.tgz \
-    && tar xzf aarch64-linux-musl-cross.tgz
+COPY <<-EOF /config/config.mak
+  # We only set the variables that are really needed, others are the sane defaults from the repo itself
+  TARGET = aarch64-linux-musl
+  GCC_VER = 14.2.0
+  OUTPUT = /opt/aarch64-linux-musl-cross
+EOF
+
+RUN git clone https://github.com/richfelker/musl-cross-make /musl-cross-make && \
+    cd /musl-cross-make && \
+    make -I /config -j$(getconf _NPROCESSORS_ONLN) && \
+    make -I /config install && \
+    cd / && \
+    rm -rf /musl-cross-make
 
 COPY --chown=node:node run.sh /home/node/run.sh
-COPY --chown=node:node 55596.diff /home/node/55596.diff
 COPY --chown=node:node 51256-v16.diff /home/node/51256-v16.diff
 
 VOLUME /home/node/.ccache
