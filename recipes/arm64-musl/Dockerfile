@@ -22,8 +22,6 @@ RUN apk add --no-cache \
         ccache \
         xz \
         patch \
-        # this is required to support building v16 on python 3.12
-        py3-packaging \
         # extra packages required for creating the musl bases cross-compiler 
         rsync make gcc g++ bzip2 git
 
@@ -42,7 +40,6 @@ RUN git clone https://github.com/richfelker/musl-cross-make /musl-cross-make && 
     rm -rf /musl-cross-make
 
 COPY --chown=node:node run.sh /home/node/run.sh
-COPY --chown=node:node 51256-v16.diff /home/node/51256-v16.diff
 
 VOLUME /home/node/.ccache
 VOLUME /out
