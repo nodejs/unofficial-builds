@@ -35,6 +35,9 @@ cd "${nodeDir}"/deps/v8/src
 
 cd "${nodeDir}"
 
+eval "$(micromamba shell hook --shell bash)"
+micromamba activate
+
 export CC="ccache gcc"
 export CXX="ccache g++"
 export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)

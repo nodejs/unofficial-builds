@@ -25,12 +25,12 @@ VOLUME /home/node/node.tar.xz
 
 USER node
 
-RUN cd "/home/node" && curl -LO https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh \
-    && bash Miniforge3-Linux-x86_64.sh -b \
-    && rm Miniforge3-Linux-x86_64.sh
-ENV PATH="/home/node/miniforge3/bin:${PATH}"
-RUN mamba install -y \
-    python=3.12 \
-    gxx=15
+ENV PATH="/home/node/.local/bin:${PATH}"
+
+RUN curl -L micro.mamba.pm/install.sh | bash -s -- -y \
+    && eval "$(micromamba shell hook --shell bash)" \
+    && micromamba install -y \
+         python=3.12 \
+         gxx=15
 
 ENTRYPOINT [ "/home/node/run.sh" ]
