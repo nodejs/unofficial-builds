@@ -22,7 +22,7 @@ RUN apk add --no-cache \
         ccache \
         xz \
         patch \
-        # extra packages required for creating the musl bases cross-compiler 
+        # extra packages required for creating the musl based cross-compiler 
         rsync make gcc g++ bzip2 git
 
 COPY <<-EOF /config/config.mak
