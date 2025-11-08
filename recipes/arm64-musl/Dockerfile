@@ -32,12 +32,19 @@ COPY <<-EOF /config/config.mak
   OUTPUT = /opt/aarch64-linux-musl-cross
 EOF
 
-RUN git clone https://github.com/richfelker/musl-cross-make /musl-cross-make && \
-    cd /musl-cross-make && \
+# set the version we want do use.
+# This is currently set to the last known working commit sha, as the lastest tag (v0.9.11) is not working
+# We specifically don't use the master branch as protection against rougue changes.
+# see following link for more context of what archives are available.
+# https://docs.github.com/en/repositories/working-with-files/using-files/downloading-source-code-archives#source-code-archive-urls
+RUN RELEASE="3635262e4524c991552789af6f36211a335a77b3" && \
+    wget https://github.com/richfelker/musl-cross-make/archive/${RELEASE}.tar.gz && \
+    tar -xzf ${RELEASE}.tar.gz && \
+    cd /musl-cross-make-${RELEASE} && \
     make -I /config -j$(getconf _NPROCESSORS_ONLN) && \
     make -I /config install && \
     cd / && \
-    rm -rf /musl-cross-make
+    rm -rf /musl-cross-make-${RELEASE}/ ${RELEASE}.tar.gz
 
 COPY --chown=node:node run.sh /home/node/run.sh
 
