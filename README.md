@@ -34,6 +34,7 @@ This list of officially supported platforms is available in the Node.js [BUILDIN
  * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 22.04 with a [custom GCC 12 toolchain](https://github.com/rvagg/rpi-newer-crosstools) (for Node.js 16 and later) in a similar manner to the official linux-armv7l binaries. Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular). ARMv6 binaries were dropped from Node.js 12 and ARMv6 support is now considered "Experimental".
  * **riscv64**: Linux riscv64 (RISC-V), cross compiled on Ubuntu 20.04 with the toolchain which the Adoptium project uses (for  now...). Built with --openssl-no-asm (Should be with --with-intl=none but that gets overriden)
  * **loong64**: Linux loong64 (LoongArch64), cross compiled on Ubuntu 20.04 with the toolchain.
+ * **linux-arm64-musl**: Linux arm64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux on arm64 hardware (e.g. Apple M1 machines). Linux arm64 with musl is considered "Experimental" by Node.js but the Node.js test infrastructure includes some Alpine test servers so support is generally good.
 
 "Experimental" status for Node.js is defined as:
 > Experimental: May not compile or test suite may not pass. The core team does not create releases for these platforms. Test failures on experimental platforms do not block releases. Contributions to improve support for these platforms are welcome.
