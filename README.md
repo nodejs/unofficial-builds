@@ -6,6 +6,7 @@ _**This project is experimental: its output is not guaranteed to remain consiste
 
 * [About](#about)
 * [Builds](#builds)
+  * [Release line support](#release-line-support)
 * [How](#how)
 * [How to add new target](#how-to-add-new-target)
 * [Manual build triggers](#manual-build-triggers)
@@ -27,19 +28,50 @@ This list of officially supported platforms is available in the Node.js [BUILDIN
 
 ## Builds
 
- * **linux-x64-debug**: Linux x64 `Debug` binaries compiled with `--gdb --debug --debug-node` enabled so that they include debug symbols to make native module, and core node, debugging easier. Tarballs replaces the Release `node` with a Debug built binary, in addition to all other standard files included in the official Node.js builds. Designed with Github workflow `actions/setup-node` in mind, so that it is easier to investigate CI segfaults. Is a direct swap for the regular binary and all node execution is the same as the Release build, except with debug symbols.
- * **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/) version 1.1.20. Primarily useful for users of Alpine Linux 3.9 and later. Linux x64 with musl is considered "Experimental" by Node.js but the Node.js test infrastructure includes some Alpine test servers so support is generally good. These Node.js builds require the `libstdc++` package to be installed on Alpine Linux, which is not installed by default. You can add this by running `apk add libstdc++`.
- * **linux-x64-glibc-217**: Linux x64, compiled with glibc 2.17 to support [older Linux distros](https://en.wikipedia.org/wiki/Glibc#Version_history), QNAP QTS 4.x and 5.x, and Synology DSM 7, and other environments where a newer glibc is unavailable.
- * **linux-x86**: Linux x86 (32-bit) binaries compiled against libc 2.17, similar to the way the official [linux-x64 binaries are produced](https://github.com/nodejs/node/blob/main/BUILDING.md#official-binary-platforms-and-toolchains). 32-bit Linux binaries were dropped for Node.js 10 and 32-bit support is now considered "Experimental".
- * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 22.04 with a [custom GCC 12 toolchain](https://github.com/rvagg/rpi-newer-crosstools) (for Node.js 16 and later) in a similar manner to the official linux-armv7l binaries. Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular). ARMv6 binaries were dropped from Node.js 12 and ARMv6 support is now considered "Experimental".
- * **riscv64**: Linux riscv64 (RISC-V), cross compiled on Ubuntu 20.04 with the toolchain which the Adoptium project uses (for  now...). Built with --openssl-no-asm (Should be with --with-intl=none but that gets overriden)
- * **loong64**: Linux loong64 (LoongArch64), cross compiled on Ubuntu 20.04 with the toolchain.
- * **linux-arm64-musl**: Linux arm64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux on arm64 hardware (e.g. Apple M1 machines). Linux arm64 with musl is considered "Experimental" by Node.js but the Node.js test infrastructure includes some Alpine test servers so support is generally good.
+ * **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux. These Node.js builds require the `libstdc++` package to be installed on Alpine Linux, which is not installed by default. You can add this by running `apk add libstdc++`.
+ * **linux-arm64-musl**: Linux arm64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux on arm64 hardware (e.g. Apple Silicon, AWS Graviton). Requires `libstdc++` on Alpine (`apk add libstdc++`).
+ * **linux-x64-glibc-217**: Linux x64, compiled with glibc 2.17 to support [older Linux distros](https://en.wikipedia.org/wiki/Glibc#Version_history), QNAP QTS 4.x and 5.x, Synology DSM 7, and other environments where a newer glibc is unavailable.
+ * **linux-x64-debug**: Linux x64 `Debug` binaries compiled with `--gdb --debug --debug-node` enabled so that they include debug symbols for native module and core node debugging. Tarballs replace the Release `node` with a Debug built binary. Designed with GitHub Actions `actions/setup-node` in mind for investigating CI segfaults.
+ * **linux-x64-pointer-compression**: Linux x64 binaries compiled with V8 pointer compression enabled (`--experimental-enable-pointer-compression`).
+ * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 22.04 with a [custom GCC 12 toolchain](https://github.com/rvagg/rpi-newer-crosstools). Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular).
+ * **linux-riscv64**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with GCC 14.
+ * **linux-loong64**: Linux LoongArch64, cross-compiled with the Loongson toolchain.
+ * **linux-x86**: Linux x86 (32-bit) binaries compiled against libc 2.17. 32-bit Linux binaries were dropped for Node.js 10 and 32-bit support is now considered "Experimental".
+ * **linux-x64-usdt**: Linux x64 binaries compiled with DTrace/USDT support.
 
 "Experimental" status for Node.js is defined as:
 > Experimental: May not compile or test suite may not pass. The core team does not create releases for these platforms. Test failures on experimental platforms do not block releases. Contributions to improve support for these platforms are welcome.
 
 Therefore, it is possible that unofficial-builds may occasionally fail to produce binaries and fixes to support these platforms may need to be contributed to Node.js.
+
+### Release line support
+
+Not all recipes can build for all Node.js release lines. As Node.js evolves, its build requirements increase (newer C++ standards, newer Python versions, etc.), and some of the older toolchains used by these recipes can no longer keep up. This project is community-maintained and relies on contributors to update recipes when they break. Some recipes have been disabled for newer Node.js versions simply because nobody has yet done the work to modernize their build environments. Pull requests to re-enable recipes for newer release lines are welcome.
+
+Builds are published at <https://unofficial-builds.nodejs.org/download/release/>.
+
+| Recipe | Supported versions | Notes |
+|--------|-------------------|-------|
+| linux-x64-musl | All | |
+| linux-arm64-musl | All | Added in [#189] |
+| linux-loong64 | >= v23; also v20.10+, v21, v22.14+ | Toolchain upgraded in [#172] |
+| linux-riscv64 | >= v17, except v24 and v26 | Cross-compiler incompatible ([#195]) |
+| linux-x64-glibc-217 | v18 - v23 | v24+: Python too old in CentOS 7 container ([#177], [#176]) |
+| linux-x64-debug | v18 - v23 | v24+: C++ compiler too old ([#180]) |
+| linux-x64-pointer-compression | v14 - v22 | v23+: CentOS 7 toolchain too old ([#155], [#158]) |
+| linux-armv6l | v16 - v23 | v24+: cross-compiler failure ([#179]) |
+| linux-x86 | < v22 | v22+: toolchain incompatibilities ([#155]) |
+| linux-x64-usdt | <= v18 | No longer maintained |
+
+[#155]: https://github.com/nodejs/unofficial-builds/pull/155
+[#158]: https://github.com/nodejs/unofficial-builds/pull/158
+[#172]: https://github.com/nodejs/unofficial-builds/pull/172
+[#176]: https://github.com/nodejs/unofficial-builds/issues/176
+[#177]: https://github.com/nodejs/unofficial-builds/pull/177
+[#179]: https://github.com/nodejs/unofficial-builds/pull/179
+[#180]: https://github.com/nodejs/unofficial-builds/pull/180
+[#189]: https://github.com/nodejs/unofficial-builds/pull/189
+[#195]: https://github.com/nodejs/unofficial-builds/pull/195
 
 ## How
 
