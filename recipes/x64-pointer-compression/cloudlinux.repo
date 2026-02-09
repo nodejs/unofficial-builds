@@ -1,9 +1,0 @@
-[cloudlinux-sclo-devtoolset-8]
-name=Cloudlinux devtoolset-8
-baseurl=https://repo.cloudlinux.com/cloudlinux/7/sclo/devtoolset-8/x86_64/
-gpgcheck=0
-
-[cloudlinux-sclo-devtoolset-9]
-name=Cloudlinux devtoolset-9
-baseurl=https://repo.cloudlinux.com/cloudlinux/7/sclo/devtoolset-9/x86_64/
-gpgcheck=0
