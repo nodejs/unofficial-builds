@@ -55,7 +55,7 @@ Builds are published at <https://unofficial-builds.nodejs.org/download/release/>
 | linux-x64-musl | All | |
 | linux-arm64-musl | All | Added in [#189] |
 | linux-loong64 | >= v23; also v20.10+, v21, v22.14+ | Toolchain upgraded in [#172] |
-| linux-riscv64 | >= v17, except v24 and v26 | Cross-compiler incompatible ([#195]) |
+| linux-riscv64 | >= v17 | Note: 26 will require [extra CXXFLAGS](https://github.com/nodejs/build/issues/4099#issuecomment-3619150119) |
 | linux-x64-glibc-217 | v18 - v23 | v24+: Python too old in CentOS 7 container ([#177], [#176]) |
 | linux-x64-debug | v18 - v23 | v24+: C++ compiler too old ([#180]) |
 | linux-x64-pointer-compression | v14 - v22 | v23+: CentOS 7 toolchain too old ([#155], [#158]) |
