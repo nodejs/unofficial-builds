@@ -17,8 +17,10 @@ cd /home/node
 
 tar -xf node.tar.xz
 
+nodeDir="/home/node/node-${fullversion}"
+
 # configuring cares correctly to not use sys/random.h on this target
-cd "node-${fullversion}"/deps/cares
+cd "${nodeDir}"/deps/cares
 sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' ./config/linux/ares_config.h
 sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' ./config/linux/ares_config.h
 
@@ -27,16 +29,18 @@ if [[ "$(grep -o 'ARES_VERSION_STR "[^"]*"' ./include/ares_version.h | awk '{pri
   sed -i 's/MSG_FASTOPEN/TCP_FASTOPEN_CONNECT/g' ./src/lib/ares__socket.c
 fi
 
-cd /home/node
+# Linux implementation of experimental WASM memory control requires Linux 3.17 & glibc 2.27 so disable it
+cd "${nodeDir}"/deps/v8/src
+[ -f d8/d8.cc ] && sed -i -e 's/#if V8_TARGET_OS_LINUX/#if false/g' wasm/wasm-objects.cc d8/d8.cc
 
-cd "node-${fullversion}"
+cd "${nodeDir}"
+
+eval "$(micromamba shell hook --shell bash)"
+micromamba activate
 
 export CC="ccache gcc"
 export CXX="ccache g++"
 export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)
-
-. /opt/rh/devtoolset-12/enable
-. /opt/rh/rh-python38/enable
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="x64" \
