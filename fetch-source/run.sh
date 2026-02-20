@@ -14,8 +14,7 @@ curl_with_retry()
   done
 }
 
-set -x
-set -e
+set -exo pipefail
 
 release_urlbase="$1"
 disttype="$2"
