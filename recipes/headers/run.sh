@@ -14,13 +14,6 @@ config_flags=
 
 cd /home/node
 
-# Curl with retry
-curl_with_retry "$source_url"
-
-if [[ "$disttype" = "release" ]]; then
-fi
-
-
 curl -fsSLO --compressed "${source_urlbase}/node-${fullversion}-headers.tar.gz"
 curl -fsSLO --compressed "${source_urlbase}/node-${fullversion}-headers.tar.xz"
 
