@@ -7,6 +7,7 @@ recipes=(
   "musl"
   "arm64-musl"
   "riscv64"
+  "riscv64-native"
   "loong64"
 
   # Legacy recipes, currently gated out for modern Node.js versions
