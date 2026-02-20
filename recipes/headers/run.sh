@@ -14,21 +14,24 @@ config_flags=
 
 cd /home/node
 
-gpg_keys=$(curl -sL https://raw.githubusercontent.com/nodejs/docker-node/HEAD/keys/node.keys)
+# Curl with retry
+curl_with_retry "$source_url"
 
-for key in ${gpg_keys}; do
-  gpg --list-keys "$key" ||
-      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
-      gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
-done
+if [[ "$disttype" = "release" ]]; then
+fi
+
 
 curl -fsSLO --compressed "${source_urlbase}/node-${fullversion}-headers.tar.gz"
 curl -fsSLO --compressed "${source_urlbase}/node-${fullversion}-headers.tar.xz"
 
 if [[ "$disttype" = "release" ]]; then
-  curl -fsSLO --compressed "${source_urlbase}/SHASUMS256.txt.asc"
-  gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc
-  grep " node-${fullversion}-headers.tar.*\$" SHASUMS256.txt | sha256sum -c -
+  pubring=$(mktemp)
+  curl -sSLo "$pubring" https://github.com/nodejs/release-keys/raw/HEAD/gpg-only-active-keys/pubring.kbx
+
+  curl -sSL "${source_urlbase}/SHASUMS256.txt.asc" \
+  | gpgv --keyring="${pubring}" --output - \
+  | grep " node-${fullversion}-headers.tar.*\$" SHASUMS256.txt \
+  | sha256sum -c -
 fi
 
 mv node-${fullversion}-headers.tar* /out/
