@@ -26,6 +26,7 @@ cd /home/node
 
 cd "node-${fullversion}"
 
+export CCACHE_BASEDIR="$PWD"
 export CC="ccache gcc"
 export CXX="ccache g++"
 export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)
