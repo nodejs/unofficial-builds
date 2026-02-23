@@ -17,6 +17,7 @@ cd /home/node
 tar -xf node.tar.xz
 cd "node-${fullversion}"
 
+export CCACHE_BASEDIR="$PWD"
 export CC_host="ccache gcc"
 export CXX_host="ccache g++"
 export CC="ccache /opt/aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc"

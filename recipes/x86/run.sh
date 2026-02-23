@@ -26,6 +26,7 @@ cd /home/node
 
 cd "node-${fullversion}"
 
+export CCACHE_BASEDIR="$PWD"
 export CC="ccache gcc"
 export CXX="ccache g++"
 export CXXFLAGS=-m32
