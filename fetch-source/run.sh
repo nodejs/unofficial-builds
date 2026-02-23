@@ -14,8 +14,7 @@ curl_with_retry()
   done
 }
 
-set -x
-set -e
+set -exo pipefail
 
 release_urlbase="$1"
 disttype="$2"
@@ -29,21 +28,16 @@ config_flags=
 
 cd /home/node
 
-gpg_keys=$(curl -sL https://raw.githubusercontent.com/nodejs/docker-node/HEAD/keys/node.keys)
-
-for key in ${gpg_keys}; do
-  gpg --list-keys "$key" ||
-      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
-      gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
-done
-
 # Curl with retry
 curl_with_retry "$source_url"
 
 if [[ "$disttype" = "release" ]]; then
+  curl_with_retry https://github.com/nodejs/release-keys/raw/HEAD/gpg-only-active-keys/pubring.kbx
   curl_with_retry "${source_urlbase}/SHASUMS256.txt.asc"
-  gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc
-  grep " node-${fullversion}.tar.xz\$" SHASUMS256.txt | sha256sum -c -
+
+  gpgv --keyring="pubring.kbx" --output - < SHASUMS256.txt.asc \
+  | grep " node-${fullversion}.tar.xz\$" \
+  | sha256sum -c -
 fi
 
 mv -f node-${fullversion}.tar.xz /out/
