@@ -23,7 +23,7 @@ if [[ "$disttype" = "release" ]]; then
 
   curl -sSL "${source_urlbase}/SHASUMS256.txt.asc" \
   | gpgv --keyring="${pubring}" --output - \
-  | grep " node-${fullversion}-headers.tar.*\$" SHASUMS256.txt \
+  | grep " node-${fullversion}-headers.tar.*\$" \
   | sha256sum -c -
 fi
 
