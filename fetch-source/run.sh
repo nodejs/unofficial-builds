@@ -35,7 +35,7 @@ if [[ "$disttype" = "release" ]]; then
   curl_with_retry https://github.com/nodejs/release-keys/raw/HEAD/gpg-only-active-keys/pubring.kbx
   curl_with_retry "${source_urlbase}/SHASUMS256.txt.asc"
 
-  gpgv --keyring="pubring.kbx" --output - < SHASUMS256.txt.asc \
+  gpgv --keyring="$(pwd)/pubring.kbx" --output - < SHASUMS256.txt.asc \
   | grep " node-${fullversion}.tar.xz\$" \
   | sha256sum -c -
 fi
