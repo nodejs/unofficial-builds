@@ -8,6 +8,7 @@ recipes=(
   "arm64-musl"
   "riscv64"
   "loong64"
+  "riscv64-pointer-compression"
 
   # Legacy recipes, currently gated out for modern Node.js versions
   "x86"                     # major < 22
