@@ -24,12 +24,10 @@ export CXX='ccache clang++-19  --target=riscv64-linux-gnu -march=rv64gc'
 export CC_host='ccache clang-19'
 export CXX_host='ccache clang++-19'
 
-#make -j$(getconf _NPROCESSORS_ONLN) binary \
-
-make -j4 binary \
+make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="riscv64" \
   ARCH="riscv64" \
-  VARIATION="" \
+  VARIATION="pointer-compression" \
   DISTTYPE="$disttype" \
   CUSTOMTAG="$customtag" \
   DATESTRING="$datestring" \
