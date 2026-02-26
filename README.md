@@ -35,6 +35,7 @@ This list of officially supported platforms is available in the Node.js [BUILDIN
  * **linux-x64-pointer-compression**: Linux x64 binaries compiled with V8 pointer compression enabled (`--experimental-enable-pointer-compression`).
  * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 22.04 with a [custom GCC 12 toolchain](https://github.com/rvagg/rpi-newer-crosstools). Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular).
  * **linux-riscv64**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with GCC 14.
+ * **linux-riscv64-pointer-compression**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with clang-19 and  --experimental-pointer-compression enabled to reduce RAM usage.
  * **linux-loong64**: Linux LoongArch64, cross-compiled with the Loongson toolchain.
  * **linux-x86**: Linux x86 (32-bit) binaries compiled against libc 2.17. 32-bit Linux binaries were dropped for Node.js 10 and 32-bit support is now considered "Experimental".
  * **linux-x64-usdt**: Linux x64 binaries compiled with DTrace/USDT support.
@@ -56,6 +57,7 @@ Builds are published at <https://unofficial-builds.nodejs.org/download/release/>
 | linux-arm64-musl | All | Added in [#189] |
 | linux-loong64 | >= v23; also v20.10+, v21, v22.14+ | Toolchain upgraded in [#172] |
 | linux-riscv64 | >= v17 | Note: 26 will require [extra CXXFLAGS](https://github.com/nodejs/build/issues/4099#issuecomment-3619150119) |
+| linux-riscv64-pointer-compression | >= v22 | Built with clang instead of GCC ([#222]) |
 | linux-x64-glibc-217 | v18 - v23 | v24+: Python too old in CentOS 7 container ([#177], [#176]) |
 | linux-x64-debug | v18 - v23 | v24+: C++ compiler too old ([#180]) |
 | linux-x64-pointer-compression | v14 - v22 | v23+: CentOS 7 toolchain too old ([#155], [#158]) |
@@ -66,6 +68,7 @@ Builds are published at <https://unofficial-builds.nodejs.org/download/release/>
 [#155]: https://github.com/nodejs/unofficial-builds/pull/155
 [#158]: https://github.com/nodejs/unofficial-builds/pull/158
 [#172]: https://github.com/nodejs/unofficial-builds/pull/172
+[#222]: https://github.com/nodejs/unofficial-builds/pull/222
 [#176]: https://github.com/nodejs/unofficial-builds/issues/176
 [#177]: https://github.com/nodejs/unofficial-builds/pull/177
 [#179]: https://github.com/nodejs/unofficial-builds/pull/179
