@@ -29,7 +29,7 @@ export CXX_host='ccache clang++-19'
 make -j4 binary \
   DESTCPU="riscv64" \
   ARCH="riscv64" \
-  VARIATION="" \
+  VARIATION="pointer-compression" \
   DISTTYPE="$disttype" \
   CUSTOMTAG="$customtag" \
   DATESTRING="$datestring" \

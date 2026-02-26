@@ -28,4 +28,4 @@ VOLUME /home/node/node.tar.xz
 
 USER node
 
- ENTRYPOINT [ "/home/node/run.sh" ]
+ENTRYPOINT [ "/home/node/run.sh" ]
