@@ -20,7 +20,9 @@ RUN apk add --no-cache \
         make \
         python3 \
         ccache \
-        xz
+        xz \
+        rust \
+        cargo
 
 COPY --chown=node:node run.sh /home/node/run.sh
 
