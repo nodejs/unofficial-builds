@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine:3.22
 
 ARG GID=1000
 ARG UID=1000
@@ -20,7 +20,9 @@ RUN apk add --no-cache \
         make \
         python3 \
         ccache \
-        xz
+        xz \
+        rust \
+        cargo
 
 COPY --chown=node:node run.sh /home/node/run.sh
 
