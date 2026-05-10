@@ -24,7 +24,7 @@ The **unofficial-builds** project aims to provide Node.js binaries for some plat
 
 This list of officially supported platforms is available in the Node.js [BUILDING.md](https://github.com/nodejs/node/blob/main/BUILDING.md#platform-list), where you can also find details in the [official nodejs.org binaries](https://github.com/nodejs/node/blob/main/BUILDING.md#official-binary-platforms-and-toolchains) section. Some platforms are "supported" in that they are tested by the Node.js test infrastructure, but they don't have binaries produced for nodejs.org. Other platforms receive minimal or no official support.
 
-**unofficial-builds** attempts to provide basic Node.js binaries for some platforms that either not supported or only partially supported by Node.js. This project **does not provide any guarantees** and its results are not rigorously tested. Builds made available at nodejs.org have very high quality standards for code quality, support on the relevant platforms and for timing and methods of delivery. Builds made available by unofficial-builds have minimal or no testing; the platforms may have no inclusion in the official Node.js test infrastructure. These builds are made available for the convenience of their user community but those communities are expected to assist in their maintenance.
+**unofficial-builds** attempts to provide basic Node.js binaries for some platforms that are either not supported or only partially supported by Node.js. This project **does not provide any guarantees** and its results are not rigorously tested. Builds made available at nodejs.org have very high quality standards for code quality, support on the relevant platforms and for timing and methods of delivery. Builds made available by unofficial-builds have minimal or no testing; the platforms may have no inclusion in the official Node.js test infrastructure. These builds are made available for the convenience of their user community but those communities are expected to assist in their maintenance.
 
 ## Builds
 
@@ -119,7 +119,7 @@ unofficial-builds/bin/queue-push.sh -v v16.4.0 # queue a new build for "v16.4.0"
 
 Optionally it is possible to (re)build recipes for historical versions that are already hosted.
 
-**Important:** Be aware the re-building historical releases will change the digest in the SHASUMS. A consistent digest is required by some consumers of builds, so certain recipes should not be rebuilt. Notably those that are used by the [docker-node](https://github.com/nodejs/docker-node) project, such as `musl`. A change in digest will lead to verification errors downstream. If you are unsure, check with other team members.
+**Important:** Be aware that re-building historical releases will change the digest in the SHASUMS. A consistent digest is required by some consumers of builds, so certain recipes should not be rebuilt. Notably those that are used by the [docker-node](https://github.com/nodejs/docker-node) project, such as `musl`. A change in digest will lead to verification errors downstream. If you are unsure, check with other team members.
 
 This can be done by adding the `-r` flag to the `queue-push.sh` command. e.g.
 
@@ -139,11 +139,11 @@ This repository is primarily intended for use on the unofficial-builds server bu
 
 ### Setup for local builds
 
-On deploy, this repository is placed within a the `unofficial-builds` home directory, it is intended to operate from a subdirectory of where the assets are build, it's `$workdir` is the parent directory of wherever it is located. The `local_build.sh` script will create some directories within its `$workdir` so it's best to create a new directory for it to operate in. So the steps for local build will be in general:
+On deploy, this repository is placed within a the `unofficial-builds` home directory, it is intended to operate from a subdirectory of where the assets are built, its `$workdir` is the parent directory of wherever it is located. The `local_build.sh` script will create some directories within its `$workdir` so it's best to create a new directory for it to operate in. So the steps for local build will be in general:
 
 * Install docker from [https://docs.docker.com](https://docs.docker.com/engine/install/)
 * Create the `$workdir` directory inside your home as normal user, you will have then:
-  * unofficial-builds/ *(this repository, created after cloned this git, inside `$workdir`)*
+  * unofficial-builds/ *(this repository, created after cloned with git, inside `$workdir`)*
   * staging/src/ *(source files for builds, will be created by `local_build.sh`)*
   * staging/`$disttype`/`$version`/ *(staging directory for builds, will be created by `local_build.sh`)*
   * .ccache/ *(ccache cache directory to speed up repeat builds, will be created by `local_build.sh`)*
@@ -168,9 +168,9 @@ cd ~/Devel/unofficial-builds-home/unofficial-builds
 bin/local_build.sh -r musl -v v21.0.0
 ```
 
-A successful build will place the source in `$workdir/staging/src/` and binaries in `$workdir/staging/release/v21.0.0/` (where `$workdir` currently is `~/Devel/unnofficial-builds-home`). All of those commands are running as a normal user.
+A successful build will place the source in `$workdir/staging/src/` and binaries in `$workdir/staging/release/v21.0.0/` (where `$workdir` currently is `~/Devel/unofficial-builds-home`). All of those commands are running as a normal user.
 
-You must erase all dockers layers before run a new recipe. Take in considerations that not all recipes can be built for all versions.
+You must erase all dockers layers before running a new recipe. Take into consideration that not all recipes can be built for all versions.
 
 ## Local installation
 
