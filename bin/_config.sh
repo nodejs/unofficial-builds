@@ -3,7 +3,6 @@
 # them out for a given version are skipped instantly.
 # centos7-toolchain must be listed first as other recipes FROM it.
 recipes=(
-  "centos7-toolchain"
   # Active recipes, ordered by likely popularity
   "headers"
   "musl"
@@ -11,9 +10,10 @@ recipes=(
   "riscv64"
   "loong64"
   "riscv64-pointer-compression"
-  "x86"                     # major < 22
-  "x64-glibc-217"           # major < 24
-  "x64-pointer-compression" # major < 23
+  "centos7-toolchain" # Shared recipe should be built first
+  "x86"
+  "x64-glibc-217"
+  "x64-pointer-compression"
 
   # Legacy recipes, currently gated out for modern Node.js versions
   "armv6l"                  # major < 24
