@@ -11,36 +11,49 @@ commit="$5"
 fullversion="$6"
 source_url="$7"
 source_urlbase="$8"
-config_flags=--openssl-no-asm
+config_flags=""
 
-cd /home/node
+homeDir=/home/node
+nodeDir="$homeDir/node-$fullversion"
 
-tar -xf node.tar.xz
+tar --directory="$homeDir" -xf "$homeDir/node.tar.xz"
 
 # configuring cares correctly to not use sys/random.h on this target
-cd "node-${fullversion}"/deps/cares/config/linux
-sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' ./ares_config.h
-sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' ./ares_config.h
+cd "$nodeDir/deps/cares"
+sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' ./config/linux/ares_config.h
+sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' ./config/linux/ares_config.h
 
-cd /home/node
+# fix https://github.com/c-ares/c-ares/issues/850
+if [[ "$(grep -o 'ARES_VERSION_STR "[^"]*"' ./include/ares_version.h | awk '{print $2}' | tr -d '"')" == "1.33.0" ]]; then
+  sed -i 's/MSG_FASTOPEN/TCP_FASTOPEN_CONNECT/g' ./src/lib/ares__socket.c
+fi
 
-cd "node-${fullversion}"
+# Linux implementation of experimental WASM memory control requires Linux 3.17 & glibc 2.27 so disable it
+cd "$nodeDir/deps/v8/src"
+[ -f d8/d8.cc ] && sed -i -e 's/#if V8_TARGET_OS_LINUX/#if false/g' wasm/wasm-objects.cc d8/d8.cc
+
+cd "$nodeDir"
 
 export CCACHE_BASEDIR="$PWD"
 export CC="ccache gcc"
 export CXX="ccache g++"
-export CXXFLAGS=-m32
-export CFLAGS=-m32
 export MAJOR_VERSION=$(echo ${fullversion} | cut -d . -f 1 | tr --delete v)
 
-if [ $MAJOR_VERSION -ge 16 ]; then
-  . /opt/rh/devtoolset-9/enable
-fi
+isNodeVersionGE() {
+	printf "$1\n$fullversion" | sort -VC
+}
+
+source "$homeDir/run_other.sh"
+source "$homeDir/run_versions.sh"
+cd "$nodeDir"
+
+setPython
+setGCC
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
-  DESTCPU="x86" \
-  ARCH="x86" \
-  VARIATION="" \
+  DESTCPU="$destCPU" \
+  ARCH="$arch" \
+  VARIATION="$variation" \
   DISTTYPE="$disttype" \
   CUSTOMTAG="$customtag" \
   DATESTRING="$datestring" \
@@ -48,4 +61,5 @@ make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   RELEASE_URLBASE="$release_urlbase" \
   CONFIG_FLAGS="$config_flags"
 
+"$nodeDir/node" -p process.versions  # Make sure there is no "Segmentation fault" error  (example: node v21.0~v21.2 x64-pointer-compression)
 mv node-*.tar.?z /out/

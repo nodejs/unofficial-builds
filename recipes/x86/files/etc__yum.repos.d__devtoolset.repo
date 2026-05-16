@@ -1,0 +1,4 @@
+[cloudlinux-sclo-devtoolset-9]
+name=Cloudlinux devtoolset-9
+baseurl=https://repo.cloudlinux.com/cloudlinux/7/sclo/devtoolset-9/i386/
+gpgcheck=0

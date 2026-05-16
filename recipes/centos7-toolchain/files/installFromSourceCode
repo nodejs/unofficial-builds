@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -e
+set -x
+
+# Args: url expectedSha256 configureArgsStr
+
+url="$1"
+expectedSha256="$2"
+configureArgsStr="$3"
+
+base=$(basename "$url")
+name=${base%.*}
+name=${name%.tar}
+ext=${base:${#name}}
+
+case "$ext" in
+  .tar.xz|.txz)   formatOpt=--xz;;
+  .tar.gz|.tgz)   formatOpt=--gzip;;
+  .tar.bz2|.tbz2) formatOpt=--bzip2;;
+  *)              formatOpt=--auto-compress
+esac
+
+# Download and verify checksum
+tmpFile="/usr/src/${base}"
+curl -fL -o "$tmpFile" "$url"
+
+if [ -n "$expectedSha256" ]; then
+  actualSha256=$(sha256sum "$tmpFile" | awk '{print $1}')
+  if [ "$actualSha256" != "$expectedSha256" ]; then
+    echo "SHA256 mismatch for $base!" >&2
+    echo "  expected: $expectedSha256" >&2
+    echo "  actual:   $actualSha256" >&2
+    exit 1
+  fi
+  echo "SHA256 verified: $base"
+fi
+
+tar --extract --file="$tmpFile" --directory=/usr/src "$formatOpt"
+rm -f "$tmpFile"
+
+source /opt/gcc15/enable
+export CC='ccache gcc'
+export CXX='ccache g++'
+
+cd "/usr/src/$name"
+chmod +x ./contrib/download_prerequisites 2>/dev/null && ./contrib/download_prerequisites
+./configure $configureArgsStr
+make -j $(nproc)
+make install
+
+hash -r
+ccache -s > "/root/ccacheStat_$name.txt"
