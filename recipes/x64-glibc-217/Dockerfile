@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 unofficial-build-recipe-centos7-toolchain
 
-COPY --chmod=755  --chown=node:node  run.sh  run_other.sh  run_versions.sh  /home/node/
+COPY --chmod=755  --chown=node:node  run_other.sh  run_versions.sh  /home/node/
 
 VOLUME /home/node/.ccache
 VOLUME /out
