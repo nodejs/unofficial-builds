@@ -18,6 +18,7 @@ cd /home/node
 tar -xf node.tar.xz
 cd "node-${fullversion}"
 
+export CCACHE_BASEDIR="$PWD"
 export CC="ccache gcc"
 export CXX="ccache g++"
 

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -e
 set -x
 
@@ -11,7 +10,7 @@ commit="$5"
 fullversion="$6"
 source_url="$7"
 source_urlbase="$8"
-config_flags="--openssl-no-asm"
+config_flags=""
 
 cd /home/node
 
@@ -19,22 +18,20 @@ tar -xf node.tar.xz
 cd "node-${fullversion}"
 
 export CCACHE_BASEDIR="$PWD"
-export CC_host="ccache gcc-13"
-export CXX_host="ccache g++-13"
-export CC="ccache /usr/bin/riscv64-linux-gnu-gcc-14"
-export CXX="ccache /usr/bin/riscv64-linux-gnu-g++-14"
+export CC_host="ccache gcc"
+export CXX_host="ccache g++"
+export CC="ccache /opt/aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc"
+export CXX="ccache /opt/aarch64-linux-musl-cross/bin/aarch64-linux-musl-g++ -static-libstdc++"
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
-  DESTCPU="riscv64" \
-  ARCH="riscv64" \
-  VARIATION="" \
+  DESTCPU="arm64" \
+  ARCH="arm64" \
+  VARIATION="musl" \
   DISTTYPE="$disttype" \
   CUSTOMTAG="$customtag" \
   DATESTRING="$datestring" \
   COMMIT="$commit" \
   RELEASE_URLBASE="$release_urlbase" \
   CONFIG_FLAGS="$config_flags"
-
-# If removal of ICU is desired, add "BUILD_INTL_FLAGS=--with-intl=none" above
 
 mv node-*.tar.?z /out/

@@ -125,13 +125,20 @@ for recipe in "${recipes_to_build[@]}"; do
     "$unofficial_release_urlbase" "$disttype" "$customtag" "$datestring" "$commit" "$fullversion" "$source_url" "$source_urlbase" \
     > "${thislogdir}/${recipe}.log" 2>&1 || echo "Failed to build recipe for ${recipe}"
 
+  # If the recipe produced no output, skip promotion and continue to the next
+  # recipe rather than letting the mv glob failure terminate the entire build
+  if ! ls "${stagingoutdir}"/node-v* > /dev/null 2>&1; then
+    echo "No artifacts produced for ${recipe}, skipping promotion"
+    continue
+  fi
+
   # Total runtime can be up to 10hr for a full recipe so do promotion and
-  # updateing of indexes after each build so dont have to wait for all builds
-  # to finish before consumers can use the assets
+  # updating of indexes after each build so we don't have to wait for all
+  # builds to finish before consumers can use the assets
   #
   # promote all assets in staging
   mv "${stagingoutdir}"/node-v* "${distoutdir}"
-  # generate SHASUM256.txt
+  # generate SHASUMS256.txt
   (cd "$distoutdir" && shasum -a256 $(ls node* 2> /dev/null) > SHASUMS256.txt) || exit 1
   echo "Generating indexes (this may error if there is no upstream tag for this build)"
   # index.json and index.tab

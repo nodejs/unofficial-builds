@@ -11,13 +11,14 @@ commit="$5"
 fullversion="$6"
 source_url="$7"
 source_urlbase="$8"
-config_flags="--openssl-no-asm"
+config_flags="--openssl-no-asm --partly-static"
 
 cd /home/node
 
 tar -xf node.tar.xz
 cd "node-${fullversion}"
 
+export CCACHE_BASEDIR="$PWD"
 export CC_host="ccache gcc-13"
 export CXX_host="ccache g++-13"
 export CC="ccache /usr/bin/loongarch64-linux-gnu-gcc-14"

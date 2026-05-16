@@ -1,4 +1,7 @@
-#!/bin/bash -xe
+#!/usr/bin/env bash
+
+set -e
+set -x
 
 __dirname=$1
 fullversion=$2

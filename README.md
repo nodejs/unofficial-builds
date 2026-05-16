@@ -6,6 +6,7 @@ _**This project is experimental: its output is not guaranteed to remain consiste
 
 * [About](#about)
 * [Builds](#builds)
+  * [Release line support](#release-line-support)
 * [How](#how)
 * [How to add new target](#how-to-add-new-target)
 * [Manual build triggers](#manual-build-triggers)
@@ -23,22 +24,57 @@ The **unofficial-builds** project aims to provide Node.js binaries for some plat
 
 This list of officially supported platforms is available in the Node.js [BUILDING.md](https://github.com/nodejs/node/blob/main/BUILDING.md#platform-list), where you can also find details in the [official nodejs.org binaries](https://github.com/nodejs/node/blob/main/BUILDING.md#official-binary-platforms-and-toolchains) section. Some platforms are "supported" in that they are tested by the Node.js test infrastructure, but they don't have binaries produced for nodejs.org. Other platforms receive minimal or no official support.
 
-**unofficial-builds** attempts to provide basic Node.js binaries for some platforms that either not supported or only partially supported by Node.js. This project **does not provide any guarantees** and its results are not rigorously tested. Builds made available at nodejs.org have very high quality standards for code quality, support on the relevant platforms and for timing and methods of delivery. Builds made available by unofficial-builds have minimal or no testing; the platforms may have no inclusion in the official Node.js test infrastructure. These builds are made available for the convenience of their user community but those communities are expected to assist in their maintenance.
+**unofficial-builds** attempts to provide basic Node.js binaries for some platforms that are either not supported or only partially supported by Node.js. This project **does not provide any guarantees** and its results are not rigorously tested. Builds made available at nodejs.org have very high quality standards for code quality, support on the relevant platforms and for timing and methods of delivery. Builds made available by unofficial-builds have minimal or no testing; the platforms may have no inclusion in the official Node.js test infrastructure. These builds are made available for the convenience of their user community but those communities are expected to assist in their maintenance.
 
 ## Builds
 
- * **linux-x64-debug**: Linux x64 `Debug` binaries compiled with `--gdb --debug --debug-node` enabled so that they include debug symbols to make native module, and core node, debugging easier. Tarballs replaces the Release `node` with a Debug built binary, in addition to all other standard files included in the official Node.js builds. Designed with Github workflow `actions/setup-node` in mind, so that it is easier to investigate CI segfaults. Is a direct swap for the regular binary and all node execution is the same as the Release build, except with debug symbols.
- * **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/) version 1.1.20. Primarily useful for users of Alpine Linux 3.9 and later. Linux x64 with musl is considered "Experimental" by Node.js but the Node.js test infrastructure includes some Alpine test servers so support is generally good. These Node.js builds require the `libstdc++` package to be installed on Alpine Linux, which is not installed by default. You can add this by running `apk add libstdc++`.
- * **linux-x64-glibc-217**: Linux x64, compiled with glibc 2.17 to support [older Linux distros](https://en.wikipedia.org/wiki/Glibc#Version_history), QNAP QTS 4.x and 5.x, and Synology DSM 7, and other environments where a newer glibc is unavailable.
- * **linux-x86**: Linux x86 (32-bit) binaries compiled against libc 2.17, similar to the way the official [linux-x64 binaries are produced](https://github.com/nodejs/node/blob/main/BUILDING.md#official-binary-platforms-and-toolchains). 32-bit Linux binaries were dropped for Node.js 10 and 32-bit support is now considered "Experimental".
- * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 16.04 with a [custom GCC 6 toolchain](https://github.com/rvagg/rpi-newer-crosstools) (for Node.js versions earlier than 16) or Ubuntu 18.04 with a [custom GCC 8 toolchain](https://github.com/rvagg/rpi-newer-crosstools) (for Node.js 16 and later) in a similar manner to the official linux-armv7l binaries. Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular). ARMv6 binaries were dropped from Node.js 12 and ARMv6 support is now considered "Experimental".
- * **riscv64**: Linux riscv64 (RISC-V), cross compiled on Ubuntu 20.04 with the toolchain which the Adoptium project uses (for  now...). Built with --openssl-no-asm (Should be with --with-intl=none but that gets overriden)
- * **loong64**: Linux loong64 (LoongArch64), cross compiled on Ubuntu 20.04 with the toolchain.
+ * **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux. These Node.js builds require the `libstdc++` package to be installed on Alpine Linux, which is not installed by default. You can add this by running `apk add libstdc++`.
+ * **linux-arm64-musl**: Linux arm64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux on arm64 hardware (e.g. Apple Silicon, AWS Graviton). Requires `libstdc++` on Alpine (`apk add libstdc++`).
+ * **linux-x64-glibc-217**: Linux x64, compiled with glibc 2.17 to support [older Linux distros](https://en.wikipedia.org/wiki/Glibc#Version_history), QNAP QTS 4.x and 5.x, Synology DSM 7, and other environments where a newer glibc is unavailable.
+ * **linux-x64-debug**: Linux x64 `Debug` binaries compiled with `--gdb --debug --debug-node` enabled so that they include debug symbols for native module and core node debugging. Tarballs replace the Release `node` with a Debug built binary. Designed with GitHub Actions `actions/setup-node` in mind for investigating CI segfaults.
+ * **linux-x64-pointer-compression**: Linux x64 binaries compiled with V8 pointer compression enabled (`--experimental-enable-pointer-compression`).
+ * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 22.04 with a [custom GCC 12 toolchain](https://github.com/rvagg/rpi-newer-crosstools). Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular).
+ * **linux-riscv64**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with GCC 14.
+ * **linux-riscv64-pointer-compression**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with clang-19 and  --experimental-pointer-compression enabled to reduce RAM usage.
+ * **linux-loong64**: Linux LoongArch64, cross-compiled with the Loongson toolchain.
+ * **linux-x86**: Linux x86 (32-bit) binaries compiled against libc 2.17. 32-bit Linux binaries were dropped for Node.js 10 and 32-bit support is now considered "Experimental".
+ * **linux-x64-usdt**: Linux x64 binaries compiled with DTrace/USDT support.
 
 "Experimental" status for Node.js is defined as:
 > Experimental: May not compile or test suite may not pass. The core team does not create releases for these platforms. Test failures on experimental platforms do not block releases. Contributions to improve support for these platforms are welcome.
 
 Therefore, it is possible that unofficial-builds may occasionally fail to produce binaries and fixes to support these platforms may need to be contributed to Node.js.
+
+### Release line support
+
+Not all recipes can build for all Node.js release lines. As Node.js evolves, its build requirements increase (newer C++ standards, newer Python versions, etc.), and some of the older toolchains used by these recipes can no longer keep up. This project is community-maintained and relies on contributors to update recipes when they break. Some recipes have been disabled for newer Node.js versions simply because nobody has yet done the work to modernize their build environments. Pull requests to re-enable recipes for newer release lines are welcome.
+
+Builds are published at <https://unofficial-builds.nodejs.org/download/release/>.
+
+| Recipe | Supported versions | Notes |
+|--------|-------------------|-------|
+| linux-x64-musl | All | |
+| linux-arm64-musl | All | Added in [#189] |
+| linux-loong64 | >= v23; also v20.10+, v21, v22.14+ | Toolchain upgraded in [#172] |
+| linux-riscv64 | >= v17 | Note: 26 will require [extra CXXFLAGS](https://github.com/nodejs/build/issues/4099#issuecomment-3619150119) |
+| linux-riscv64-pointer-compression | >= v22 | Built with clang instead of GCC ([#222]) |
+| linux-x64-glibc-217 | v18 - v23 | v24+: Python too old in CentOS 7 container ([#177], [#176]) |
+| linux-x64-debug | v18 - v23 | v24+: C++ compiler too old ([#180]) |
+| linux-x64-pointer-compression | v14 - v22 | v23+: CentOS 7 toolchain too old ([#155], [#158]) |
+| linux-armv6l | v16 - v23 | v24+: cross-compiler failure ([#179]) |
+| linux-x86 | < v22 | v22+: toolchain incompatibilities ([#155]) |
+| linux-x64-usdt | <= v18 | No longer maintained |
+
+[#155]: https://github.com/nodejs/unofficial-builds/pull/155
+[#158]: https://github.com/nodejs/unofficial-builds/pull/158
+[#172]: https://github.com/nodejs/unofficial-builds/pull/172
+[#222]: https://github.com/nodejs/unofficial-builds/pull/222
+[#176]: https://github.com/nodejs/unofficial-builds/issues/176
+[#177]: https://github.com/nodejs/unofficial-builds/pull/177
+[#179]: https://github.com/nodejs/unofficial-builds/pull/179
+[#180]: https://github.com/nodejs/unofficial-builds/pull/180
+[#189]: https://github.com/nodejs/unofficial-builds/pull/189
+[#195]: https://github.com/nodejs/unofficial-builds/pull/195
 
 ## How
 
@@ -81,9 +117,9 @@ cd ~
 unofficial-builds/bin/queue-push.sh -v v16.4.0 # queue a new build for "v16.4.0" - the "v" in the tag is necessary
 ```
 
-Optionally it is possible to (re)build recipes for historical versions that are already hosted.  
+Optionally it is possible to (re)build recipes for historical versions that are already hosted.
 
-**Important:** Be aware the re-building historical releases will change the digest in the SHASUMS. A consistent digest is required by some consumers of builds, so certain recipes should not be rebuilt. Notably those that are used by the [docker-node](https://github.com/nodejs/docker-node) project, such as `musl`. A change in digest will lead to verification errors downstream. If you are unsure, check with other team members.
+**Important:** Be aware that re-building historical releases will change the digest in the SHASUMS. A consistent digest is required by some consumers of builds, so certain recipes should not be rebuilt. Notably those that are used by the [docker-node](https://github.com/nodejs/docker-node) project, such as `musl`. A change in digest will lead to verification errors downstream. If you are unsure, check with other team members.
 
 This can be done by adding the `-r` flag to the `queue-push.sh` command. e.g.
 
@@ -103,11 +139,11 @@ This repository is primarily intended for use on the unofficial-builds server bu
 
 ### Setup for local builds
 
-On deploy, this repository is placed within a the `unofficial-builds` home directory, it is intended to operate from a subdirectory of where the assets are build, it's `$workdir` is the parent directory of wherever it is located. The `local_build.sh` script will create some directories within its `$workdir` so it's best to create a new directory for it to operate in. So the steps for local build will be in general:
+On deploy, this repository is placed within a the `unofficial-builds` home directory, it is intended to operate from a subdirectory of where the assets are built, its `$workdir` is the parent directory of wherever it is located. The `local_build.sh` script will create some directories within its `$workdir` so it's best to create a new directory for it to operate in. So the steps for local build will be in general:
 
 * Install docker from [https://docs.docker.com](https://docs.docker.com/engine/install/)
 * Create the `$workdir` directory inside your home as normal user, you will have then:
-  * unofficial-builds/ *(this repository, created after cloned this git, inside `$workdir`)*
+  * unofficial-builds/ *(this repository, created after cloned with git, inside `$workdir`)*
   * staging/src/ *(source files for builds, will be created by `local_build.sh`)*
   * staging/`$disttype`/`$version`/ *(staging directory for builds, will be created by `local_build.sh`)*
   * .ccache/ *(ccache cache directory to speed up repeat builds, will be created by `local_build.sh`)*
@@ -132,31 +168,31 @@ cd ~/Devel/unofficial-builds-home/unofficial-builds
 bin/local_build.sh -r musl -v v21.0.0
 ```
 
-A successful build will place the source in `$workdir/staging/src/` and binaries in `$workdir/staging/release/v21.0.0/` (where `$workdir` currently is `~/Devel/unnofficial-builds-home`). All of those commands are running as a normal user.
+A successful build will place the source in `$workdir/staging/src/` and binaries in `$workdir/staging/release/v21.0.0/` (where `$workdir` currently is `~/Devel/unofficial-builds-home`). All of those commands are running as a normal user.
 
-You must erase all dockers layers before run a new recipe. Take in considerations that not all recipes can be built for all versions.
+You must erase all dockers layers before running a new recipe. Take into consideration that not all recipes can be built for all versions.
 
 ## Local installation
 
 https://unofficial-builds.nodejs.org/download/ hosts compressed archives that may be downloaded and installed by end-users. Each downloadable archive contains bin/, include/, lib/, share/ directories. There are different ways to install nodejs from the compressed files. Choose one of these methods below.
 
-For frequent production use, please mirror the executables to your own servers.  
+For frequent production use, please mirror the executables to your own servers.
 
-1. Manually unzip the archive into /usr/local/, thereby creating the various directories such as bin/, lib/, etc. (Note that this will include extraneous files at the top-level, including CHANGELOG.md, README.md and LICENSE).  
-or  
-2. Github Actions example: https://github.com/dixyes/ghactionsplay/blob/main/.github/workflows/glibc217node20.yml  
-or  
-3. (experimental). Download install-node.sh from https://gist.github.com/rvagg/742f811be491a49ba0b9 . Examine and modify the script as needed. Contributions are welcome. The script could be added to this repository in the future.  
-or  
+1. Manually unzip the archive into /usr/local/, thereby creating the various directories such as bin/, lib/, etc. (Note that this will include extraneous files at the top-level, including CHANGELOG.md, README.md and LICENSE).
+or
+2. Github Actions example: https://github.com/dixyes/ghactionsplay/blob/main/.github/workflows/glibc217node20.yml
+or
+3. (experimental). Download install-node.sh from https://gist.github.com/rvagg/742f811be491a49ba0b9 . Examine and modify the script as needed. Contributions are welcome. The script could be added to this repository in the future.
+or
 4. (experimental). `nvm` method. The general idea with `nvm` is this will install the software:
 ```
 NVM_NODEJS_ORG_MIRROR=https://unofficial-builds.nodejs.org/download/release nvm install 12
 ```
-However, `nvm` is looking for an exactly named file which it may not always find.  
+However, `nvm` is looking for an exactly named file which it may not always find.
 `node-v20.9.0-linux-x64.tar.gz` instead of `node-v20.9.0-linux-x64-glibc-217.tar.gz`.
-Therefore a possible idea is to create a mirror of https://unofficial-builds.nodejs.org/download/release such as https://www.example.com/download/release, including files index.json and index.tab. Rename archives in the mirror so `nvm` will recognize them. For example, copy `node-v20.9.0-linux-x64-glibc-217.tar.gz` to `node-v20.9.0-linux-x64.tar.gz`. Then an installation would succeed:  
+Therefore a possible idea is to create a mirror of https://unofficial-builds.nodejs.org/download/release such as https://www.example.com/download/release, including files index.json and index.tab. Rename archives in the mirror so `nvm` will recognize them. For example, copy `node-v20.9.0-linux-x64-glibc-217.tar.gz` to `node-v20.9.0-linux-x64.tar.gz`. Then an installation would succeed:
 ```
-NVM_NODEJS_ORG_MIRROR=https://www.example.com/download/release nvm install v20.9.0 
+NVM_NODEJS_ORG_MIRROR=https://www.example.com/download/release nvm install v20.9.0
 ```
 
 ## Team

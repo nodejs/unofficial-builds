@@ -7,4 +7,5 @@ fullversion=$2
 
 decode "$fullversion"
 
-test "$major" -ge "16" && test "$major" -lt "24"
+# v20 does not build successfully with clang19
+test "$major" -ge "22"
