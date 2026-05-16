@@ -1,5 +1,7 @@
 # All of our build recipes, new recipes should be added here.
+# centos7-toolchain must be listed first as other recipes FROM it.
 recipes=(
+  "centos7-toolchain"
   "headers"
   "x86"
   "musl"

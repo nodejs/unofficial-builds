@@ -12,10 +12,12 @@ RUN /root/installPrerequisites
 
 COPY  --chmod=755  files/installFromSourceCode  /root/installFromSourceCode
 COPY  --chmod=755  files/opt__gcc15__enable     /opt/gcc15/enable
-RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  /root/installFromSourceCode  python3   https://www.python.org/ftp/python/3.9.23/Python-3.9.23.tar.xz      '--prefix=/usr/local/'
-RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  /root/installFromSourceCode  python3   https://www.python.org/ftp/python/3.13.5/Python-3.13.5.tar.xz      '--prefix=/usr/local/'
-RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  /root/installFromSourceCode  gcc       https://gcc.gnu.org/pub/gcc/releases/gcc-15.1.0/gcc-15.1.0.tar.xz  '--prefix=/opt/gcc15/  --with-default-libstdcxx-abi=gcc4-compatible  --enable-languages=c,c++  --enable-checking=release  --enable-gnu-indirect-function  --with-linker-hash-style=gnu  --disable-bootstrap  --disable-multilib  --build=i686-redhat-linux'
-RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  /root/installFromSourceCode  binutils  https://sourceware.org/pub/binutils/releases/binutils-2.44.tar.xz  '--prefix=/opt/gcc15/  --without-debuginfod  --disable-nls  LDFLAGS=-pthread'
+COPY  --chmod=755  files/checksums.sh           /root/checksums.sh
+
+RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  . /root/checksums.sh  &&  /root/installFromSourceCode  https://www.python.org/ftp/python/3.9.23/Python-3.9.23.tar.xz      "$sha256_python39"  '--prefix=/usr/local/'
+RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  . /root/checksums.sh  &&  /root/installFromSourceCode  https://www.python.org/ftp/python/3.13.5/Python-3.13.5.tar.xz      "$sha256_python313" '--prefix=/usr/local/'
+RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  . /root/checksums.sh  &&  /root/installFromSourceCode  https://gcc.gnu.org/pub/gcc/releases/gcc-15.1.0/gcc-15.1.0.tar.xz  "$sha256_gcc15"     '--prefix=/opt/gcc15/  --with-default-libstdcxx-abi=gcc4-compatible  --enable-languages=c,c++  --enable-checking=release  --enable-gnu-indirect-function  --with-linker-hash-style=gnu  --disable-bootstrap  --disable-multilib  --build=i686-redhat-linux'
+RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  . /root/checksums.sh  &&  /root/installFromSourceCode  https://sourceware.org/pub/binutils/releases/binutils-2.44.tar.xz  "$sha256_binutils"  '--prefix=/opt/gcc15/  --without-debuginfod  --disable-nls  LDFLAGS=-pthread'
 
 COPY --chmod=755  --chown=node:node  run.sh  run_other.sh  run_versions.sh  /home/node/
 
