@@ -45,6 +45,7 @@ isNodeVersionGE() {
 
 source "$homeDir/run_other.sh"
 source "$homeDir/run_versions.sh"
+cd "$nodeDir"
 
 setPython
 setGCC
