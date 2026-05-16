@@ -19,7 +19,7 @@ curl -fsSLO --compressed "${source_urlbase}/node-${fullversion}-headers.tar.xz"
 
 if [[ "$disttype" = "release" ]]; then
   pubring=$(mktemp)
-  curl -sSLo "$pubring" https://github.com/nodejs/release-keys/raw/HEAD/gpg-only-active-keys/pubring.kbx
+  curl -sSLo "$pubring" https://github.com/nodejs/release-keys/raw/HEAD/gpg/pubring.kbx
 
   curl -sSL "${source_urlbase}/SHASUMS256.txt.asc" \
   | gpgv --keyring="${pubring}" --output - \
