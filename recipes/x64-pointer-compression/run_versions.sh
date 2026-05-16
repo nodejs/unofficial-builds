@@ -1,4 +1,7 @@
-#!/bin/bash -eux
+#!/usr/bin/env bash
+
+set -e
+set -x
 
 setPython() {
 	if isNodeVersionGE 'v22.3';  then export PYTHON='python3.13';  return;  fi  # Python 3.13: Node.js v22.3  ~ latest (v24.3)

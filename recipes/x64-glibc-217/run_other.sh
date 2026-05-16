@@ -1,4 +1,7 @@
-#!/bin/bash -eux
+#!/usr/bin/env bash
+
+set -e
+set -x
 
 config_flags=
 destCPU=x64
