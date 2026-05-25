@@ -22,7 +22,11 @@ RUN apk add --no-cache \
         ccache \
         xz \
         patch \
-        # extra packages required for creating the musl based cross-compiler 
+        # rustc/cargo are needed for the Temporal API support in Node 26+
+        # (build silently skips Temporal when they are not in PATH)
+        rust \
+        cargo \
+        # extra packages required for creating the musl based cross-compiler
         rsync make gcc g++ bzip2 git
 
 COPY <<-EOF /config/config.mak
