@@ -23,9 +23,10 @@ RUN apk add --no-cache \
         xz \
         patch \
         # rustc/cargo are needed for the Temporal API support in Node 26+
-        # (build silently skips Temporal when they are not in PATH)
-        rust \
-        cargo \
+        # (the build silently skips Temporal when they are not in PATH).
+        # Pinned so the rust-std target download below matches.
+        rust=1.87.0-r1 \
+        cargo=1.87.0-r1 \
         # extra packages required for creating the musl based cross-compiler
         rsync make gcc g++ bzip2 git
 
@@ -49,6 +50,32 @@ RUN RELEASE="3635262e4524c991552789af6f36211a335a77b3" && \
     make -I /config install && \
     cd / && \
     rm -rf /musl-cross-make-${RELEASE}/ ${RELEASE}.tar.gz
+
+# Install the aarch64-unknown-linux-musl Rust std library for cross-compiling.
+# Alpine's `rust` package only ships the host (x86_64-musl) standard library;
+# building `cargo --target=aarch64-unknown-linux-musl` requires a matching
+# std artifact under `/usr/lib/rustlib/`. Pull the prebuilt std from the
+# upstream Rust dist server, matching the version of the host toolchain.
+# Hash verified against the publisher's signed sha256 manifest at
+# https://static.rust-lang.org/dist/rust-std-1.87.0-aarch64-unknown-linux-musl.tar.xz.sha256
+# Approach based on nikeee's commit in
+# https://github.com/nodejs/unofficial-builds/commit/74ae38b3117b8dc29f6f2f00e37205cbe447e167
+RUN RUST_STD_VERSION="1.87.0" && \
+    RUST_STD_SHA256="15fd0652e2f3a8b678be8a83e396a1103fb1bb941afabe3fdaec706f3bdc85d0" && \
+    wget -O /tmp/rust-std.tar.xz \
+        "https://static.rust-lang.org/dist/rust-std-${RUST_STD_VERSION}-aarch64-unknown-linux-musl.tar.xz" && \
+    echo "${RUST_STD_SHA256}  /tmp/rust-std.tar.xz" | sha256sum -c - && \
+    tar -xJf /tmp/rust-std.tar.xz -C /tmp && \
+    cp -r /tmp/rust-std-${RUST_STD_VERSION}-aarch64-unknown-linux-musl/rust-std-aarch64-unknown-linux-musl/lib/rustlib/aarch64-unknown-linux-musl \
+        /usr/lib/rustlib/ && \
+    rm -rf /tmp/rust-std*
+
+# Tell Cargo to use the musl-cross-make linker when targeting aarch64-musl.
+COPY <<-EOF /usr/local/cargo/config.toml
+  [target.aarch64-unknown-linux-musl]
+  linker = "/opt/aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc"
+EOF
+ENV CARGO_HOME=/usr/local/cargo
 
 COPY --chown=node:node run.sh /home/node/run.sh
 
