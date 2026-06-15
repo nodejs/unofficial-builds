@@ -11,7 +11,7 @@ commit="$5"
 fullversion="$6"
 source_url="$7"
 source_urlbase="$8"
-config_flags="--openssl-no-asm --without-ffi"
+config_flags="--openssl-no-asm"
 
 cd /home/node
 
