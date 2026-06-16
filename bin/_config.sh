@@ -1,6 +1,7 @@
 # All of our build recipes, order matters: recipes run sequentially, so put the
 # most popular/important ones first. Recipes with a should-build.sh that gates
 # them out for a given version are skipped instantly.
+# centos7-toolchain must be listed first as other recipes FROM it.
 recipes=(
   # Active recipes, ordered by likely popularity
   "headers"
@@ -9,12 +10,13 @@ recipes=(
   "riscv64"
   "loong64"
   "riscv64-pointer-compression"
+  "centos7-toolchain" # Shared recipe should be built first
+  "x86"
+  "x64-glibc-217"
+  "x64-pointer-compression"
 
   # Legacy recipes, currently gated out for modern Node.js versions
-  "x86"                     # major < 22
   "armv6l"                  # major < 24
-  "x64-glibc-217"           # major < 24
-  "x64-pointer-compression" # major < 23
   "x64-debug"               # major < 24
   "x64-usdt"                # major <= 18
 )
