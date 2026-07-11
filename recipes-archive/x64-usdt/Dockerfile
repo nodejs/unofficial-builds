@@ -9,7 +9,7 @@ RUN groupadd --gid $GID node \
 COPY cloudlinux.repo /etc/yum.repos.d/cloudlinux.repo
 
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* \
-    && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-* \
+    && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=https://vault.centos.org|g' /etc/yum.repos.d/CentOS-* \
     && yum install -y epel-release \
     && yum upgrade -y \
     && yum install -y \

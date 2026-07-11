@@ -97,6 +97,13 @@ fi
 
 echo "Building ${recipe} recipe and tagging as ${image_tag_pfx}${recipe}..."
 docker build "${__dirname}/../fetch-source/" -t "${image_tag_pfx}fetch-source" --build-arg UID=${USER_ID} --build-arg GID=${GROUP_ID}
+
+# If the recipe depends on the centos7-toolchain base image, build it first
+if grep -q "FROM.*centos7-toolchain" "${recipes_dir}/${recipe}/Dockerfile" 2>/dev/null; then
+  echo "Building centos7-toolchain base image first..."
+  docker build "${recipes_dir}/centos7-toolchain/" -t "${image_tag_pfx}centos7-toolchain" --build-arg UID=${USER_ID} --build-arg GID=${GROUP_ID}
+fi
+
 docker build "${recipes_dir}/${recipe}/" -t "${image_tag_pfx}${recipe}" --build-arg UID=${USER_ID} --build-arg GID=${GROUP_ID}
 
 ## -- DOWNLOAD SOURCE -- ##
