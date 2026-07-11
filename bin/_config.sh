@@ -10,13 +10,14 @@ recipes=(
   "loong64"
   "riscv64-pointer-compression"
 
-  # Legacy recipes, currently gated out for modern Node.js versions
-  "x86"                     # major < 22
+  # Legacy recipes, gated to the v22 line only; these sunset when v22 goes EOL
+  # (April 2027) unless their toolchains are modernised for v24+. Recipes whose
+  # gates exclude all release lines still receiving builds live in
+  # ../recipes-archive/.
   "armv6l"                  # major < 24
   "x64-glibc-217"           # major < 24
   "x64-pointer-compression" # major < 23
   "x64-debug"               # major < 24
-  "x64-usdt"                # major <= 18
 )
 
 
