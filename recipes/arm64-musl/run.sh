@@ -22,6 +22,13 @@ export CC_host="ccache gcc"
 export CXX_host="ccache g++"
 export CC="ccache /opt/aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc"
 export CXX="ccache /opt/aarch64-linux-musl-cross/bin/aarch64-linux-musl-g++ -static-libstdc++"
+# The musl-cross-make-built toolchain has no specs file injecting
+# -Wl,--build-id like distro-packaged cross-compilers do, so without this the
+# resulting binary has no .note.gnu.build-id section and no PT_NOTE program
+# header. That breaks postject-based SEA tooling, which relies on
+# dl_iterate_phdr finding a PT_NOTE segment to extend.
+# Refs: https://github.com/nodejs/unofficial-builds/issues/200
+export LDFLAGS="-Wl,--build-id=sha1"
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="arm64" \
