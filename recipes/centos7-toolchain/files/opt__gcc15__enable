@@ -14,5 +14,6 @@ export LD_LIBRARY_PATH="$DIR/lib64:$DIR/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH
 export PKG_CONFIG_PATH="$DIR/lib64/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}"
 
 if [ -f "$DIR/bin/gcc" ]; then
-	export LDFLAGS='-static-libstdc++'
+	# targets ship the system libstdc++/libgcc of their era, not GCC 15's
+	export LDFLAGS='-static-libstdc++ -static-libgcc'
 fi

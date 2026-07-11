@@ -1,3 +1,4 @@
+# ${image_tag_pfx}centos7-toolchain, built first per bin/_config.sh
 FROM --platform=linux/amd64 unofficial-build-recipe-centos7-toolchain
 
 COPY --chmod=755  --chown=node:node  run_other.sh  run_versions.sh  /home/node/

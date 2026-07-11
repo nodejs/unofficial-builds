@@ -21,20 +21,22 @@ case "$ext" in
   *)              formatOpt=--auto-compress
 esac
 
-# Download and verify checksum
+# Empty means a mistyped variable at the call site, not consent to skip
+if [ -z "$expectedSha256" ]; then
+  echo "No sha256 provided for $url, refusing to install unverified source" >&2
+  exit 1
+fi
 tmpFile="/usr/src/${base}"
 curl -fL -o "$tmpFile" "$url"
 
-if [ -n "$expectedSha256" ]; then
-  actualSha256=$(sha256sum "$tmpFile" | awk '{print $1}')
-  if [ "$actualSha256" != "$expectedSha256" ]; then
-    echo "SHA256 mismatch for $base!" >&2
-    echo "  expected: $expectedSha256" >&2
-    echo "  actual:   $actualSha256" >&2
-    exit 1
-  fi
-  echo "SHA256 verified: $base"
+actualSha256=$(sha256sum "$tmpFile" | awk '{print $1}')
+if [ "$actualSha256" != "$expectedSha256" ]; then
+  echo "SHA256 mismatch for $base!" >&2
+  echo "  expected: $expectedSha256" >&2
+  echo "  actual:   $actualSha256" >&2
+  exit 1
 fi
+echo "SHA256 verified: $base"
 
 tar --extract --file="$tmpFile" --directory=/usr/src "$formatOpt"
 rm -f "$tmpFile"
@@ -51,3 +53,7 @@ make install
 
 hash -r
 ccache -s > "/root/ccacheStat_$name.txt"
+
+# keep the build tree out of the image layer
+cd /
+rm -rf "/usr/src/${name:?}"
