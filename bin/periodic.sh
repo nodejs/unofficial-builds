@@ -14,3 +14,5 @@ for disttype in $disttypes; do
 done
 
 "${__dirname}/build-if-queued.sh"
+
+"${__dirname}/status.js"

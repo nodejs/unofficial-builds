@@ -1,21 +1,107 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Node.js Unofficial Builds Project</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Node.js Unofficial Builds Project</title>
+<!-- Style shared with bin/status.js output, keep the two in sync -->
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff; --fg: #1a1a1a; --muted: #6b7280; --line: #e5e7eb;
+    --accent: #3E863D;
+    --ok-bg: #dcfce7; --ok-fg: #166534;
+    --fail-bg: #fee2e2; --fail-fg: #991b1b;
+    --na-bg: #f3f4f6; --na-fg: #6b7280;
+    --build-bg: #dbeafe; --build-fg: #1e40af;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111418; --fg: #e5e7eb; --muted: #9ca3af; --line: #2a2f36;
+      --accent: #5FA04E;
+      --ok-bg: #14351f; --ok-fg: #6ee7a0;
+      --fail-bg: #3b1518; --fail-fg: #f4a0a0;
+      --na-bg: #1c2128; --na-fg: #8b949e;
+      --build-bg: #172a54; --build-fg: #93c5fd;
+    }
+  }
+  body {
+    background: var(--bg); color: var(--fg);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    max-width: 60rem; margin: 2rem auto; padding: 0 1rem;
+  }
+  header { display: flex; align-items: baseline; gap: 0.7rem; margin-bottom: 0.4rem; }
+  header img { height: 28px; align-self: center; }
+  header .unofficial { font-size: 1.25rem; font-weight: 600; }
+  h1 { font-size: 1.3rem; margin-bottom: 0.2rem; }
+  h2 { font-size: 1.05rem; margin-top: 2rem; }
+  code { font-family: ui-monospace, monospace; font-size: 0.9em; }
+  nav { margin: 0.8rem 0 1.6rem; font-size: 0.9rem; }
+  nav a { margin-right: 1.2rem; color: var(--accent); font-weight: 600; text-decoration: none; }
+  nav a:hover { text-decoration: underline; }
+  h2 { border-bottom: 2px solid var(--accent); padding-bottom: 0.2rem; }
+  .disclaimer {
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 0.6rem 1rem; color: var(--muted); font-size: 0.9rem;
+  }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 0.45rem 0.8rem; text-align: left; border-bottom: 1px solid var(--line); }
+  thead th { font-weight: 600; }
+  tbody th { font-weight: 400; font-family: ui-monospace, monospace; font-size: 0.9rem; }
+  table a {
+    text-decoration: underline; text-decoration-style: dotted;
+    text-decoration-color: var(--muted); text-underline-offset: 3px;
+  }
+  table a.cell { text-decoration: none; }
+  .badge {
+    display: inline-block; padding: 0.1rem 0.55rem; border-radius: 999px;
+    font-size: 0.8rem; font-weight: 600;
+  }
+  .ok       { background: var(--ok-bg);    color: var(--ok-fg); }
+  .failed   { background: var(--fail-bg);  color: var(--fail-fg); }
+  .na, .none { background: var(--na-bg);   color: var(--na-fg); font-weight: 400; }
+  .building { background: var(--build-bg); color: var(--build-fg); }
+  .generated, footer { color: var(--muted); font-size: 0.85rem; margin-top: 1rem; }
+  a { color: inherit; }
+</style>
 </head>
-
 <body>
-  <h1>Node.js Unofficial Builds Project</h1>
+<header>
+  <a href="/"><picture>
+    <source srcset="/logo-dark.svg" media="(prefers-color-scheme: dark)">
+    <img src="/logo.svg" alt="Node.js">
+  </picture></a>
+  <span class="unofficial">unofficial builds</span>
+</header>
+<p>Node.js binaries for platforms that are not officially supported by the
+Node.js project, built and published automatically as new releases appear.</p>
 
-  <p>See <a href="https://github.com/nodejs/unofficial-builds/">github.com/nodejs/unofficial-builds</a> for full details.</p>
+<nav>
+  <a href="/download/release/">downloads</a>
+  <a href="/logs/status.html">build status</a>
+  <a href="/logs/">build logs</a>
+  <a href="https://github.com/nodejs/unofficial-builds#builds">platform details</a>
+  <a href="https://github.com/nodejs/unofficial-builds#release-line-support">supported versions</a>
+  <a href="https://github.com/nodejs/unofficial-builds">repository</a>
+</nav>
 
-  <p>Builds are available at: <a href="https://unofficial-builds.nodejs.org/download/">https://unofficial-builds.nodejs.org/download/</a></p>
+<p class="disclaimer"><b>This project is experimental:</b> builds receive
+minimal or no testing, output is not guaranteed to remain consistent, and its
+existence is not guaranteed into the future. Official builds, with full
+quality guarantees, are at <a href="https://nodejs.org/">nodejs.org</a>. This
+project is community-maintained and needs contributors to stay viable; help
+is welcome via the
+<a href="https://github.com/nodejs/unofficial-builds">repository</a>.</p>
 
-  <p>Build logs are available at: <a href="https://unofficial-builds.nodejs.org/logs/">https://unofficial-builds.nodejs.org/logs/</a></p>
+<div id="status">
+  <p><a href="/logs/status.html">Current build status</a></p>
+</div>
 
-  <p><i><b>This project is experimental: its output is not guaranteed to remain consistent and its existence is not guaranteed into the future.</b> This project is in need of a community of maintainers to keep it viable. If you would like to join, please submit pull requests to improve the work here.</i></p>
-
-  <p><b>unofficial-builds</b> attempts to provide basic Node.js binaries for some platforms that either not supported or only partially supported by Node.js. This project <b>does not provide any guarantees</b> and its results are not rigorously tested. Builds made available at <a href="https://nodejs.org/">nodejs.org</a> have very high quality standards for code quality, support on the relevant platforms platforms and for timing and methods of delivery. Builds made available by unofficial-builds have minimal or no testing; the platforms may have no inclusion in the official Node.js test infrastructure. These builds are made available for the convenience of their user community but those communities are expected to assist in their maintenance.</p>
+<script>
+  fetch('/logs/status-fragment.html')
+    .then((res) => { if (!res.ok) { throw new Error(res.status) } return res.text() })
+    .then((html) => { document.getElementById('status').innerHTML = html })
+    .catch(() => {})
+</script>
 </body>
 </html>
