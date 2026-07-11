@@ -14,8 +14,8 @@ COPY  --chmod=755  files/installFromSourceCode  /root/installFromSourceCode
 COPY  --chmod=755  files/opt__gcc15__enable     /opt/gcc15/enable
 COPY  --chmod=755  files/checksums.sh           /root/checksums.sh
 
-RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  . /root/checksums.sh  &&  /root/installFromSourceCode  https://www.python.org/ftp/python/3.9.23/Python-3.9.23.tar.xz      "$sha256_python39"  '--prefix=/usr/local/'
-RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  . /root/checksums.sh  &&  /root/installFromSourceCode  https://www.python.org/ftp/python/3.13.5/Python-3.13.5.tar.xz      "$sha256_python313" '--prefix=/usr/local/'
-RUN   --mount=type=cache,target=/root/.ccache  --mount=type=tmpfs,target=/usr/src  . /root/checksums.sh  &&  /root/installFromSourceCode  https://gcc.gnu.org/pub/gcc/releases/gcc-15.1.0/gcc-15.1.0.tar.xz  "$sha256_gcc15"     '--prefix=/opt/gcc15/  --with-default-libstdcxx-abi=gcc4-compatible  --enable-languages=c,c++  --enable-checking=release  --enable-gnu-indirect-function  --with-linker-hash-style=gnu  --disable-bootstrap  --disable-multilib  --build=x86_64-redhat-linux'
+RUN   --mount=type=cache,target=/root/.ccache  . /root/checksums.sh  &&  /root/installFromSourceCode  https://www.python.org/ftp/python/3.9.23/Python-3.9.23.tar.xz      "$sha256_python39"  '--prefix=/usr/local/'
+RUN   --mount=type=cache,target=/root/.ccache  . /root/checksums.sh  &&  /root/installFromSourceCode  https://www.python.org/ftp/python/3.13.5/Python-3.13.5.tar.xz      "$sha256_python313" '--prefix=/usr/local/'
+RUN   --mount=type=cache,target=/root/.ccache  . /root/checksums.sh  &&  /root/installFromSourceCode  https://gcc.gnu.org/pub/gcc/releases/gcc-15.1.0/gcc-15.1.0.tar.xz  "$sha256_gcc15"     '--prefix=/opt/gcc15/  --with-default-libstdcxx-abi=gcc4-compatible  --enable-languages=c,c++  --enable-checking=release  --enable-gnu-indirect-function  --with-linker-hash-style=gnu  --disable-bootstrap  --disable-multilib  --build=x86_64-redhat-linux'
 
 COPY --chmod=755  --chown=node:node  run.sh  /home/node/

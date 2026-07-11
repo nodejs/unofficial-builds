@@ -61,5 +61,21 @@ make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   RELEASE_URLBASE="$release_urlbase" \
   CONFIG_FLAGS="$config_flags"
 
-"$nodeDir/node" -p process.versions  # Make sure there is no "Segmentation fault" error  (example: node v21.0~v21.2 x64-pointer-compression)
+# Run without the GCC 15 runtime paths: the binary must work on a stock
+# glibc 2.17 system, an LD_LIBRARY_PATH here would mask a bad dynamic link.
+# Also catches segfaulting builds (example: v21.0~v21.2 x64-pointer-compression)
+env -u LD_LIBRARY_PATH "$nodeDir/node" -p process.versions
+
+# glibc 2.17 compatibility is the product: fail if the binary picked up a
+# dependency on the GCC 15 runtime or a glibc symbol newer than the target
+if env -u LD_LIBRARY_PATH ldd "$nodeDir/node" | grep /opt/gcc15; then
+  echo "binary is dynamically linked against the GCC 15 runtime" >&2
+  exit 1
+fi
+maxGlibc=$(objdump -T "$nodeDir/node" | grep -oE 'GLIBC_[0-9]+\.[0-9]+' | sort -uV | tail -1)
+if [ "$(printf 'GLIBC_2.17\n%s\n' "$maxGlibc" | sort -V | tail -1)" != "GLIBC_2.17" ]; then
+  echo "binary requires $maxGlibc, newer than the glibc 2.17 target" >&2
+  exit 1
+fi
+
 mv node-*.tar.?z /out/
