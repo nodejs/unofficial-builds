@@ -83,6 +83,10 @@ echo "Logging to ${thislogdir}..."
 
 echo "Starting build @ $(date)"
 
+# Refresh the status page so it shows this build in progress; periodic.sh
+# can't do it while a build has it blocked
+"${__dirname}/status.js" || true
+
 sourcedir="${stagingdir}/src/${fullversion}"
 mkdir -p $sourcedir
 sourcefile="${sourcedir}/node-${fullversion}.tar.xz"
@@ -143,6 +147,9 @@ for recipe in "${recipes_to_build[@]}"; do
   echo "Generating indexes (this may error if there is no upstream tag for this build)"
   # index.json and index.tab
   npm exec nodejs-dist-indexer@${dist_indexer_version} --yes -- --dist "$distdir_promote" --indexjson "${distdir_promote}/index.json"  --indextab "${distdir_promote}/index.tab" || true
+
+  # refresh the status page as each recipe's assets become available
+  "${__dirname}/status.js" || true
 done
 
 echo "Finished build @ $(date)"
