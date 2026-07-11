@@ -37,8 +37,6 @@ This list of officially supported platforms is available in the Node.js [BUILDIN
  * **linux-riscv64**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with GCC 14.
  * **linux-riscv64-pointer-compression**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with clang-19 and  --experimental-pointer-compression enabled to reduce RAM usage.
  * **linux-loong64**: Linux LoongArch64, cross-compiled with the Loongson toolchain.
- * **linux-x86**: Linux x86 (32-bit) binaries compiled against libc 2.17. 32-bit Linux binaries were dropped for Node.js 10 and 32-bit support is now considered "Experimental".
- * **linux-x64-usdt**: Linux x64 binaries compiled with DTrace/USDT support.
 
 "Experimental" status for Node.js is defined as:
 > Experimental: May not compile or test suite may not pass. The core team does not create releases for these platforms. Test failures on experimental platforms do not block releases. Contributions to improve support for these platforms are welcome.
@@ -62,8 +60,19 @@ Builds are published at <https://unofficial-builds.nodejs.org/download/release/>
 | linux-x64-debug | v18 - v23 | v24+: C++ compiler too old ([#180]) |
 | linux-x64-pointer-compression | v14 - v22 | v23+: CentOS 7 toolchain too old ([#155], [#158]) |
 | linux-armv6l | v16 - v23 | v24+: cross-compiler failure ([#179]) |
-| linux-x86 | < v22 | v22+: toolchain incompatibilities ([#155]) |
-| linux-x64-usdt | <= v18 | No longer maintained |
+
+### Archived recipes
+
+Recipes whose version gates exclude every Node.js release line still receiving
+new releases are moved to [`recipes-archive/`](recipes-archive/). Their
+historical binaries remain published and indexed. To resurrect one, move it
+back into `recipes/`, add it to the recipe list in `bin/_config.sh`, and
+modernise its toolchain for current Node.js build requirements.
+
+| Recipe | Built | Archived |
+|--------|-------|----------|
+| linux-x86 | < v22 | 2026: v20 was the last eligible line, EOL April 2026; toolchain incompatibilities from v22 ([#155]) |
+| linux-x64-usdt | <= v18 | 2026: v18 EOL April 2025; no longer maintained |
 
 [#155]: https://github.com/nodejs/unofficial-builds/pull/155
 [#158]: https://github.com/nodejs/unofficial-builds/pull/158
