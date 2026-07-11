@@ -65,7 +65,9 @@ RUN RUST_STD_VERSION="1.91.1" && \
     wget -O /tmp/rust-std.tar.xz \
         "https://static.rust-lang.org/dist/rust-std-${RUST_STD_VERSION}-aarch64-unknown-linux-musl.tar.xz" && \
     echo "${RUST_STD_SHA256}  /tmp/rust-std.tar.xz" | sha256sum -c - && \
-    tar -xJf /tmp/rust-std.tar.xz -C /tmp && \
+    # busybox tar's built-in xz decoder cannot read this archive; use the
+    # real xz installed above
+    xz -dc /tmp/rust-std.tar.xz | tar -x -C /tmp && \
     cp -r /tmp/rust-std-${RUST_STD_VERSION}-aarch64-unknown-linux-musl/rust-std-aarch64-unknown-linux-musl/lib/rustlib/aarch64-unknown-linux-musl \
         /usr/lib/rustlib/ && \
     rm -rf /tmp/rust-std*
