@@ -183,26 +183,32 @@ You must erase all dockers layers before running a new recipe. Take into conside
 
 ## Local installation
 
-https://unofficial-builds.nodejs.org/download/ hosts compressed archives that may be downloaded and installed by end-users. Each downloadable archive contains bin/, include/, lib/, share/ directories. There are different ways to install nodejs from the compressed files. Choose one of these methods below.
+https://unofficial-builds.nodejs.org/download/ hosts compressed archives that may be downloaded and installed by end-users. Each downloadable archive contains bin/, include/, lib/, share/ directories.
 
 For frequent production use, please mirror the executables to your own servers.
 
-1. Manually unzip the archive into /usr/local/, thereby creating the various directories such as bin/, lib/, etc. (Note that this will include extraneous files at the top-level, including CHANGELOG.md, README.md and LICENSE).
-or
-2. Github Actions example: https://github.com/dixyes/ghactionsplay/blob/main/.github/workflows/glibc217node20.yml
-or
-3. (experimental). Download install-node.sh from https://gist.github.com/rvagg/742f811be491a49ba0b9 . Examine and modify the script as needed. Contributions are welcome. The script could be added to this repository in the future.
-or
-4. (experimental). `nvm` method. The general idea with `nvm` is this will install the software:
+### install-node.sh
+
+The [`install-node.sh`](www/install-node.sh) script, served at <https://unofficial-builds.nodejs.org/install-node.sh>, auto-detects your platform, including unofficial variants (musl, glibc-217 for older distros, ARMv6, RISC-V, LoongArch), resolves the newest version that has a build for it, verifies the download against `SHASUMS256.txt`, and installs to `/usr/local` (change with `--dir`).
+
+```sh
+# read it first, then run it
+curl -fsSLO https://unofficial-builds.nodejs.org/install-node.sh
+less install-node.sh
+bash install-node.sh          # or: sudo bash install-node.sh
 ```
-NVM_NODEJS_ORG_MIRROR=https://unofficial-builds.nodejs.org/download/release nvm install 12
+
+See `--help` for version pinning (`--line 22`), nightlies and release candidates (`--nightly`, `--rc`), and forcing a variant (`--platform x64-glibc-217`). One-liner if you are comfortable with it:
+
+```sh
+curl -fsSL https://unofficial-builds.nodejs.org/install-node.sh | bash -s -- --yes
 ```
-However, `nvm` is looking for an exactly named file which it may not always find.
-`node-v20.9.0-linux-x64.tar.gz` instead of `node-v20.9.0-linux-x64-glibc-217.tar.gz`.
-Therefore a possible idea is to create a mirror of https://unofficial-builds.nodejs.org/download/release such as https://www.example.com/download/release, including files index.json and index.tab. Rename archives in the mirror so `nvm` will recognize them. For example, copy `node-v20.9.0-linux-x64-glibc-217.tar.gz` to `node-v20.9.0-linux-x64.tar.gz`. Then an installation would succeed:
-```
-NVM_NODEJS_ORG_MIRROR=https://www.example.com/download/release nvm install v20.9.0
-```
+
+The script verifies download *integrity* against `SHASUMS256.txt` fetched from the same server; it does not verify publisher GPG signatures.
+
+### Manual installation
+
+Unzip the archive into /usr/local/, thereby creating the various directories such as bin/, lib/, etc. (Note that this will include extraneous files at the top-level, including CHANGELOG.md, README.md and LICENSE.)
 
 ## Team
 

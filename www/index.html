@@ -36,6 +36,10 @@
   h1 { font-size: 1.3rem; margin-bottom: 0.2rem; }
   h2 { font-size: 1.05rem; margin-top: 2rem; }
   code { font-family: ui-monospace, monospace; font-size: 0.9em; }
+  pre {
+    background: var(--na-bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: 0.7rem 1rem; overflow-x: auto; line-height: 1.45;
+  }
   nav { margin: 0.8rem 0 1.6rem; font-size: 0.9rem; }
   nav a { margin-right: 1.2rem; color: var(--accent); font-weight: 600; text-decoration: none; }
   nav a:hover { text-decoration: underline; }
@@ -78,12 +82,20 @@ Node.js project, built and published automatically as new releases appear.</p>
 
 <nav>
   <a href="/download/release/">downloads</a>
+  <a href="/install-node.sh">install script</a>
   <a href="/logs/status.html">build status</a>
   <a href="/logs/">build logs</a>
   <a href="https://github.com/nodejs/unofficial-builds#builds">platform details</a>
   <a href="https://github.com/nodejs/unofficial-builds#release-line-support">supported versions</a>
   <a href="https://github.com/nodejs/unofficial-builds">repository</a>
 </nav>
+
+<p>Install the latest build for your platform, auto-detected, with the
+download verified against its published checksum
+(<a href="https://github.com/nodejs/unofficial-builds#install-nodesh">docs</a>):</p>
+<pre><code>curl -fsSLO https://unofficial-builds.nodejs.org/install-node.sh
+less install-node.sh   # you do read shell scripts before running them, don't you?
+bash install-node.sh</code></pre>
 
 <p class="disclaimer"><b>This project is experimental:</b> builds receive
 minimal or no testing, output is not guaranteed to remain consistent, and its
