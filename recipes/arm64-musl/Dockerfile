@@ -22,11 +22,6 @@ RUN apk add --no-cache \
         ccache \
         xz \
         patch \
-        # rustc/cargo are needed for the Temporal API support in Node 26+
-        # (the build silently skips Temporal when they are not in PATH).
-        # Pinned so the rust-std target download below matches.
-        rust=1.91.1-r2 \
-        cargo=1.91.1-r2 \
         # extra packages required for creating the musl based cross-compiler
         rsync make gcc g++ bzip2 git
 
@@ -51,26 +46,37 @@ RUN RELEASE="3635262e4524c991552789af6f36211a335a77b3" && \
     cd / && \
     rm -rf /musl-cross-make-${RELEASE}/ ${RELEASE}.tar.gz
 
-# Install the aarch64-unknown-linux-musl Rust std library for cross-compiling.
-# Alpine's `rust` package only ships the host (x86_64-musl) standard library;
-# building `cargo --target=aarch64-unknown-linux-musl` requires a matching
-# std artifact under `/usr/lib/rustlib/`. Pull the prebuilt std from the
-# upstream Rust dist server, matching the version of the host toolchain.
-# Hash verified against the publisher's signed sha256 manifest at
-# https://static.rust-lang.org/dist/rust-std-1.91.1-aarch64-unknown-linux-musl.tar.xz.sha256
+# Rust for the Temporal API in Node 26+ (the build silently skips Temporal
+# when rustc/cargo are not in PATH). The host toolchain and the
+# aarch64-unknown-linux-musl target std must come from the same build of
+# rustc (E0514 rejects mixed rlibs), so both come from the upstream dist
+# server rather than Alpine's own rustc build, which cannot consume upstream
+# std rlibs. Hashes verified against the publisher's manifests, e.g.
+# https://static.rust-lang.org/dist/rust-1.91.1-x86_64-unknown-linux-musl.tar.xz.sha256
 # Approach based on nikeee's commit in
 # https://github.com/nodejs/unofficial-builds/commit/74ae38b3117b8dc29f6f2f00e37205cbe447e167
-RUN RUST_STD_VERSION="1.91.1" && \
+RUN RUST_VERSION="1.91.1" && \
+    RUST_HOST_SHA256="2fc7cac1663d245530bca0d487b2423f6b5a0bb99f03eedc439a155484dd6f56" && \
     RUST_STD_SHA256="2a919a0e5df46e1bfe4b8be8fbc81cf48bf9813be34ff5f212a2a68f03eb517f" && \
-    wget -O /tmp/rust-std.tar.xz \
-        "https://static.rust-lang.org/dist/rust-std-${RUST_STD_VERSION}-aarch64-unknown-linux-musl.tar.xz" && \
-    echo "${RUST_STD_SHA256}  /tmp/rust-std.tar.xz" | sha256sum -c - && \
-    # busybox tar's built-in xz decoder cannot read this archive; use the
+    wget -O /tmp/rust-host.tar.xz \
+        "https://static.rust-lang.org/dist/rust-${RUST_VERSION}-x86_64-unknown-linux-musl.tar.xz" && \
+    echo "${RUST_HOST_SHA256}  /tmp/rust-host.tar.xz" | sha256sum -c - && \
+    # busybox tar's built-in xz decoder cannot read these archives; use the
     # real xz installed above
+    xz -dc /tmp/rust-host.tar.xz | tar -x -C /tmp && \
+    /tmp/rust-${RUST_VERSION}-x86_64-unknown-linux-musl/install.sh --prefix=/opt/rust \
+        --components=rustc,cargo,rust-std-x86_64-unknown-linux-musl --disable-ldconfig && \
+    wget -O /tmp/rust-std.tar.xz \
+        "https://static.rust-lang.org/dist/rust-std-${RUST_VERSION}-aarch64-unknown-linux-musl.tar.xz" && \
+    echo "${RUST_STD_SHA256}  /tmp/rust-std.tar.xz" | sha256sum -c - && \
     xz -dc /tmp/rust-std.tar.xz | tar -x -C /tmp && \
-    cp -r /tmp/rust-std-${RUST_STD_VERSION}-aarch64-unknown-linux-musl/rust-std-aarch64-unknown-linux-musl/lib/rustlib/aarch64-unknown-linux-musl \
-        /usr/lib/rustlib/ && \
-    rm -rf /tmp/rust-std*
+    /tmp/rust-std-${RUST_VERSION}-aarch64-unknown-linux-musl/install.sh --prefix=/opt/rust --disable-ldconfig && \
+    rm -rf /tmp/rust-*
+
+# node's gyp invokes plain `cargo` for host and cross builds alike; this shim
+# (found first in PATH) adds --target for the cross target only
+COPY --chmod=755 cargo-shim.sh /usr/local/bin/cargo
+RUN ln -s /opt/rust/bin/rustc /usr/local/bin/rustc
 
 # Tell Cargo to use the musl-cross-make linker when targeting aarch64-musl.
 COPY <<-EOF /usr/local/cargo/config.toml
