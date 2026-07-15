@@ -50,6 +50,12 @@ cd "$nodeDir"
 setPython
 setGCC
 
+# Temporal needs the rust toolchain; a broken toolchain must fail configure
+# loudly, not ship binaries that silently lack Temporal
+if [ "$MAJOR_VERSION" -ge 26 ]; then
+  config_flags="$config_flags --v8-enable-temporal-support"
+fi
+
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="$destCPU" \
   ARCH="$arch" \
