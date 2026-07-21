@@ -71,6 +71,10 @@ make -j$(getconf _NPROCESSORS_ONLN) binary V= \
 # glibc 2.17 system, an LD_LIBRARY_PATH here would mask a bad dynamic link.
 # Also catches segfaulting builds (example: v21.0~v21.2 x64-pointer-compression)
 env -u LD_LIBRARY_PATH "$nodeDir/node" -p process.versions
+# Test Temporal API for Node v26+
+if [ "$MAJOR_VERSION" -ge 26 ]; then
+  env -u LD_LIBRARY_PATH "$nodeDir/node" -e 'Temporal'
+fi
 
 # glibc 2.17 compatibility is the product: fail if the binary picked up a
 # dependency on the GCC 15 runtime or a glibc symbol newer than the target
