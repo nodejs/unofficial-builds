@@ -23,10 +23,10 @@ RUN   --mount=type=cache,target=/root/.ccache  . /root/checksums.sh  &&  /root/i
 # Hash verified against the publisher's manifest at
 # https://static.rust-lang.org/dist/rust-1.91.1-x86_64-unknown-linux-gnu.tar.xz.sha256
 RUN RUST_VERSION="1.91.1" && \
-    RUST_HOST_SHA256="db178028da493a663b2e344a142076fb0f72adea4120043983f488de9cf95214" && \
+    . /root/checksums.sh && \
     curl -fL -o /tmp/rust-host.tar.xz \
         "https://static.rust-lang.org/dist/rust-${RUST_VERSION}-x86_64-unknown-linux-gnu.tar.xz" && \
-    echo "${RUST_HOST_SHA256}  /tmp/rust-host.tar.xz" | sha256sum -c - && \
+    echo "${sha256_rust}  /tmp/rust-host.tar.xz" | sha256sum -c - && \
     tar -xJf /tmp/rust-host.tar.xz -C /tmp && \
     /tmp/rust-${RUST_VERSION}-x86_64-unknown-linux-gnu/install.sh --prefix=/opt/rust \
         --components=rustc,cargo,rust-std-x86_64-unknown-linux-gnu --disable-ldconfig && \
