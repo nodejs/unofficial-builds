@@ -23,6 +23,8 @@ export CC_host="ccache gcc-13"
 export CXX_host="ccache g++-13"
 export CC="ccache /usr/bin/riscv64-linux-gnu-gcc-14"
 export CXX="ccache /usr/bin/riscv64-linux-gnu-g++-14"
+# Required to allow GCC to be able to build on RISC-V
+export CXXFLAGS="-DHWY_BROKEN_EMU128=0 -DHWY_BROKEN_TARGETS=HWY_RVV"
 
 make -j$(getconf _NPROCESSORS_ONLN) binary V= \
   DESTCPU="riscv64" \
