@@ -32,6 +32,11 @@ fi
 cd "$nodeDir/deps/v8/src"
 [ -f d8/d8.cc ] && sed -i -e 's/#if V8_TARGET_OS_LINUX/#if false/g' wasm/wasm-objects.cc d8/d8.cc
 
+# glibc < 2.28 <sys/types.h> defines major()/minor() macros; brace init avoids them (LIEF #1375)
+for f in "$nodeDir"/deps/LIEF/include/LIEF/runtime/{osx,windows}/Host.hpp; do
+  [ -f "$f" ] && sed -i -e 's/\bmajor(major)/major{major}/' -e 's/\bminor(minor)/minor{minor}/' "$f"
+done
+
 cd "$nodeDir"
 
 export CCACHE_BASEDIR="$PWD"
