@@ -17,7 +17,6 @@ _**This project is experimental: its output is not guaranteed to remain consiste
 * [Team](#team)
 * [Emeritus](#emeritus)
 
-
 ## About
 
 The **unofficial-builds** project aims to provide Node.js binaries for some platforms not made available officially by the Node.js project at nodejs.org. Node.js is used on a large variety of platforms, but the Node.js project, in consultation with the [Node.js Build Working Group](https://github.com/nodejs/build), maintains a limited set of platforms that it tests code on and produces binaries for.
@@ -28,15 +27,15 @@ This list of officially supported platforms is available in the Node.js [BUILDIN
 
 ## Builds
 
- * **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux. These Node.js builds require the `libstdc++` package to be installed on Alpine Linux, which is not installed by default. You can add this by running `apk add libstdc++`.
- * **linux-arm64-musl**: Linux arm64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux on arm64 hardware (e.g. Apple Silicon, AWS Graviton). Requires `libstdc++` on Alpine (`apk add libstdc++`).
- * **linux-x64-glibc-217**: Linux x64, compiled with glibc 2.17 to support [older Linux distros](https://en.wikipedia.org/wiki/Glibc#Version_history), QNAP QTS 4.x and 5.x, Synology DSM 7, and other environments where a newer glibc is unavailable.
- * **linux-x64-debug**: Linux x64 `Debug` binaries compiled with `--gdb --debug --debug-node` enabled so that they include debug symbols for native module and core node debugging. Tarballs replace the Release `node` with a Debug built binary. Designed with GitHub Actions `actions/setup-node` in mind for investigating CI segfaults.
- * **linux-x64-pointer-compression**: Linux x64 binaries compiled with V8 pointer compression enabled (`--experimental-enable-pointer-compression`).
- * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 22.04 with a [custom GCC 12 toolchain](https://github.com/rvagg/rpi-newer-crosstools). Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular).
- * **linux-riscv64**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with GCC 14.
- * **linux-riscv64-pointer-compression**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with clang-19 and  --experimental-pointer-compression enabled to reduce RAM usage.
- * **linux-loong64**: Linux LoongArch64, cross-compiled with the Loongson toolchain.
+* **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux. These Node.js builds require the `libstdc++` package to be installed on Alpine Linux, which is not installed by default. You can add this by running `apk add libstdc++`.
+* **linux-arm64-musl**: Linux arm64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux on arm64 hardware (e.g. Apple Silicon, AWS Graviton). Requires `libstdc++` on Alpine (`apk add libstdc++`).
+* **linux-x64-glibc-217**: Linux x64, compiled with glibc 2.17 to support [older Linux distros](https://en.wikipedia.org/wiki/Glibc#Version_history), QNAP QTS 4.x and 5.x, Synology DSM 7, and other environments where a newer glibc is unavailable.
+* **linux-x64-debug**: Linux x64 `Debug` binaries compiled with `--gdb --debug --debug-node` enabled so that they include debug symbols for native module and core node debugging. Tarballs replace the Release `node` with a Debug built binary. Designed with GitHub Actions `actions/setup-node` in mind for investigating CI segfaults.
+* **linux-x64-pointer-compression**: Linux x64 binaries compiled with V8 pointer compression enabled (`--experimental-enable-pointer-compression`).
+* **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 22.04 with a [custom GCC 12 toolchain](https://github.com/rvagg/rpi-newer-crosstools). Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular).
+* **linux-riscv64**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with GCC 14.
+* **linux-riscv64-pointer-compression**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with clang-19 and  --experimental-pointer-compression enabled to reduce RAM usage.
+* **linux-loong64**: Linux LoongArch64, cross-compiled with the Loongson toolchain.
 
 "Experimental" status for Node.js is defined as:
 > Experimental: May not compile or test suite may not pass. The core team does not create releases for these platforms. Test failures on experimental platforms do not block releases. Contributions to improve support for these platforms are welcome.
@@ -50,7 +49,7 @@ Not all recipes can build for all Node.js release lines. As Node.js evolves, its
 Builds are published at <https://unofficial-builds.nodejs.org/download/release/>.
 
 | Recipe | Supported versions | Notes |
-|--------|-------------------|-------|
+| ------ | ------------------ | ----- |
 | linux-x64-musl | All | |
 | linux-arm64-musl | All | Added in [#189] |
 | linux-loong64 | >= v23; also v20.10+, v21, v22.14+ | Toolchain upgraded in [#172] |
@@ -70,7 +69,7 @@ back into `recipes/`, add it to the recipe list in `bin/_config.sh`, and
 modernise its toolchain for current Node.js build requirements.
 
 | Recipe | Built | Archived |
-|--------|-------|----------|
+| ------ | ----- | -------- |
 | linux-x86 | < v22 | 2026: v20 was the last eligible line, EOL April 2026; toolchain incompatibilities from v22 ([#155]) |
 | linux-x64-usdt | <= v18 | 2026: v18 EOL April 2025; no longer maintained |
 
@@ -83,7 +82,6 @@ modernise its toolchain for current Node.js build requirements.
 [#179]: https://github.com/nodejs/unofficial-builds/pull/179
 [#180]: https://github.com/nodejs/unofficial-builds/pull/180
 [#189]: https://github.com/nodejs/unofficial-builds/pull/189
-[#195]: https://github.com/nodejs/unofficial-builds/pull/195
 
 ## How
 
@@ -93,12 +91,12 @@ The server is configured according to the Ansible [unofficial-builds](https://gi
 
 The build process operates as the `nodejs` user and in `/home/nodejs` which has the following layout:
 
- - `bin/` - currently only contains [`deploy-unofficial-builds.sh`](https://github.com/nodejs/build/tree/main/ansible/roles/unofficial-builds/files/deploy-unofficial-builds.sh) which is responsible for updating `unofficial-builds/` with this repository when it's updated (see below).
- - `download/` - the directory served at <https://unofficial-builds.nodejs.org/download/>
- - `logs/` - the directory served at <https://unofficial-builds.nodejs.org/logs/> and containing logs for deploys of this repository [github-webhook.log](http://unofficial-builds.nodejs.org/logs/github-webhook.log) and a directory for each build, identified by a datetime string combined with the Node.js version string of the compiled version. These log directories contain a primary `build.log` and a log file for each compile build "recipe" which is the output of the Docker container for that build.
- - `staging/` - a directory where build assets are placed by the Docker containers prior to promotion to `download/` along with a SHASUMS256.txt file and updated index.json and index.tab files.
- - `unofficial-builds/` - a clone of this repository, updated automatically when `main` is updated here.
- - `var/` - where state files are stored for the build queue, build locking and release checking.
+* `bin/` - currently only contains [`deploy-unofficial-builds.sh`](https://github.com/nodejs/build/tree/main/ansible/roles/unofficial-builds/files/deploy-unofficial-builds.sh) which is responsible for updating `unofficial-builds/` with this repository when it's updated (see below).
+* `download/` - the directory served at <https://unofficial-builds.nodejs.org/download/>
+* `logs/` - the directory served at <https://unofficial-builds.nodejs.org/logs/> and containing logs for deploys of this repository [github-webhook.log](http://unofficial-builds.nodejs.org/logs/github-webhook.log) and a directory for each build, identified by a datetime string combined with the Node.js version string of the compiled version. These log directories contain a primary `build.log` and a log file for each compile build "recipe" which is the output of the Docker container for that build.
+* `staging/` - a directory where build assets are placed by the Docker containers prior to promotion to `download/` along with a SHASUMS256.txt file and updated index.json and index.tab files.
+* `unofficial-builds/` - a clone of this repository, updated automatically when `main` is updated here.
+* `var/` - where state files are stored for the build queue, build locking and release checking.
 
 The build process can be described as:
 
@@ -152,10 +150,10 @@ On deploy, this repository is placed within a the `unofficial-builds` home direc
 
 * Install docker from [https://docs.docker.com](https://docs.docker.com/engine/install/)
 * Create the `$workdir` directory inside your home as normal user, you will have then:
-  * unofficial-builds/ *(this repository, created after cloned with git, inside `$workdir`)*
-  * staging/src/ *(source files for builds, will be created by `local_build.sh`)*
-  * staging/`$disttype`/`$version`/ *(staging directory for builds, will be created by `local_build.sh`)*
-  * .ccache/ *(ccache cache directory to speed up repeat builds, will be created by `local_build.sh`)*
+  * unofficial-builds/ _(this repository, created after cloned with git, inside `$workdir`)_
+  * staging/src/ _(source files for builds, will be created by `local_build.sh`)_
+  * staging/`$disttype`/`$version`/ _(staging directory for builds, will be created by `local_build.sh`)_
+  * .ccache/ _(ccache cache directory to speed up repeat builds, will be created by `local_build.sh`)_
 
 e.g. Login as normal user and clone this repository using the following commands to place it within an `unofficial-builds-home` directory:
 
@@ -183,7 +181,7 @@ You must erase all dockers layers before running a new recipe. Take into conside
 
 ## Local installation
 
-https://unofficial-builds.nodejs.org/download/ hosts compressed archives that may be downloaded and installed by end-users. Each downloadable archive contains bin/, include/, lib/, share/ directories.
+<https://unofficial-builds.nodejs.org/download/> hosts compressed archives that may be downloaded and installed by end-users. Each downloadable archive contains bin/, include/, lib/, share/ directories.
 
 For frequent production use, please mirror the executables to your own servers.
 
@@ -204,7 +202,7 @@ See `--help` for version pinning (`--line 22`), nightlies and release candidates
 curl -fsSL https://unofficial-builds.nodejs.org/install-node.sh | bash -s -- --yes
 ```
 
-The script verifies download *integrity* against `SHASUMS256.txt` fetched from the same server; it does not verify publisher GPG signatures.
+The script verifies download _integrity_ against `SHASUMS256.txt` fetched from the same server; it does not verify publisher GPG signatures.
 
 ### Manual installation
 
