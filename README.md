@@ -50,7 +50,7 @@ Builds are published at <https://unofficial-builds.nodejs.org/download/release/>
 
 | Recipe | Supported versions | Notes |
 | ------ | ------------------ | ----- |
-| linux-x64-musl | All | |
+| linux-x64-musl | All | Officially supported as of 22.23.4, 24.22.0, 26.11.0 |
 | linux-arm64-musl | All | Added in [#189] |
 | linux-loong64 | >= v23; also v20.10+, v21, v22.14+ | Toolchain upgraded in [#172] |
 | linux-riscv64 | >= v17 | Note: 26 will require [extra CXXFLAGS](https://github.com/nodejs/build/issues/4099#issuecomment-3619150119) |
