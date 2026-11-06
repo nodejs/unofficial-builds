@@ -25,6 +25,8 @@ recipes=(
   # ../recipes-archive/.
   "armv6l"                  # major < 24
   "x64-debug"               # major < 24
+
+  "arm64-pointer-compression" # v22.17+, v24.2+, v26
 )
 
 
