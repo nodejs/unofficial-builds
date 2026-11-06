@@ -32,6 +32,7 @@ This list of officially supported platforms is available in the Node.js [BUILDIN
 * **linux-x64-glibc-217**: Linux x64, compiled with glibc 2.17 to support [older Linux distros](https://en.wikipedia.org/wiki/Glibc#Version_history), QNAP QTS 4.x and 5.x, Synology DSM 7, and other environments where a newer glibc is unavailable.
 * **linux-x64-debug**: Linux x64 `Debug` binaries compiled with `--gdb --debug --debug-node` enabled so that they include debug symbols for native module and core node debugging. Tarballs replace the Release `node` with a Debug built binary. Designed with GitHub Actions `actions/setup-node` in mind for investigating CI segfaults.
 * **linux-x64-pointer-compression**: Linux x64 binaries compiled with V8 pointer compression enabled (`--experimental-enable-pointer-compression`).
+* **linux-arm64-pointer-compression**: Linux ARM64 binaries cross-compiled on amd64 Ubuntu 24.04 (glibc 2.39) with GCC 14 and `--experimental-enable-pointer-compression`. The V8 heap is limited to 4 GiB. This variant uses a distinct native-module ABI. Rebuild V8 and `nan` addons with its bundled headers and `config.gypi`.
 * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 22.04 with a [custom GCC 12 toolchain](https://github.com/rvagg/rpi-newer-crosstools). Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular).
 * **linux-riscv64**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with GCC 14.
 * **linux-riscv64-pointer-compression**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with clang-19 and  --experimental-pointer-compression enabled to reduce RAM usage.
@@ -58,6 +59,7 @@ Builds are published at <https://unofficial-builds.nodejs.org/download/release/>
 | linux-x64-glibc-217 | v18 - v23 | v24+: Python too old in CentOS 7 container ([#177], [#176]) |
 | linux-x64-debug | v18 - v23 | v24+: C++ compiler too old ([#180]) |
 | linux-x64-pointer-compression | v14 - v22 | v23+: CentOS 7 toolchain too old ([#155], [#158]) |
+| linux-arm64-pointer-compression | v22.17+, v24.2+, v26.x | The server's active keyring cannot verify `v22.17.0` or `v24.2.0`. To backfill either, verify its signed checksums with the [historical Node.js release keys](https://github.com/nodejs/release-keys/tree/HEAD/gpg), check the source tarball's SHA-256, and stage it in `$workdir/staging/src/<version>/` for `bin/local_build.sh`. |
 | linux-armv6l | v16 - v23 | v24+: cross-compiler failure ([#179]) |
 
 ### Archived recipes
