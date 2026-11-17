@@ -16,6 +16,7 @@ recipes=(
   "riscv64-pointer-compression"
   "x64-glibc-217"           # CentOS 7 + GCC 15/Python built from source
   "x64-pointer-compression" # CentOS 7 + GCC 15/Python built from source
+  "arm64-pointer-compression" # v22.17+, v24.2+, v26
 
   "musl" # Officially supported, can be dropped after 26 goes EOL
 
@@ -25,8 +26,6 @@ recipes=(
   # ../recipes-archive/.
   "armv6l"                  # major < 24
   "x64-debug"               # major < 24
-
-  "arm64-pointer-compression" # v22.17+, v24.2+, v26
 )
 
 

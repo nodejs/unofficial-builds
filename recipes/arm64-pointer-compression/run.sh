@@ -15,20 +15,8 @@ cd /home/node
 tar -xf node.tar.xz
 cd "node-${fullversion}"
 
-# configure reads the numeric default in node_version.h for config.gypi.
-# The runtime and the headers shipped to addon authors use the same definition.
 major=${fullversion%%.*}
 major=${major#v}
-stock_abi=$(python3 tools/getmoduleversion.py)
-# Proposed registry allocations. Confirm these before enabling server builds.
-case "$major:$stock_abi" in
-  22:127) module_abi=155 ;;
-  24:137) module_abi=156 ;;
-  26:147) module_abi=157 ;;
-  *) echo "No ARM64 pointer-compression ABI for $fullversion (stock ABI $stock_abi)" >&2; exit 1 ;;
-esac
-sed -i "s/^#define NODE_MODULE_VERSION ${stock_abi}$/#define NODE_MODULE_VERSION ${module_abi}/" src/node_version.h
-test "$(python3 tools/getmoduleversion.py)" = "$module_abi"
 
 export CCACHE_BASEDIR="$PWD"
 export CC_host="ccache gcc-14"

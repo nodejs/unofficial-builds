@@ -27,12 +27,14 @@ This list of officially supported platforms is available in the Node.js [BUILDIN
 
 ## Builds
 
+Native addons built for official Node.js binaries may be incompatible with unofficial builds, even when `NODE_MODULE_VERSION` matches. Loading an incompatible addon can crash Node.js. Rebuild V8 and `nan` addons from source with the headers and `config.gypi` bundled with the selected build.
+
 * **linux-x64-musl**: Linux x64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux. These Node.js builds require the `libstdc++` package to be installed on Alpine Linux, which is not installed by default. You can add this by running `apk add libstdc++`.
 * **linux-arm64-musl**: Linux arm64 binaries compiled against [musl libc](https://www.musl-libc.org/). Primarily useful for users of Alpine Linux on arm64 hardware (e.g. Apple Silicon, AWS Graviton). Requires `libstdc++` on Alpine (`apk add libstdc++`).
 * **linux-x64-glibc-217**: Linux x64, compiled with glibc 2.17 to support [older Linux distros](https://en.wikipedia.org/wiki/Glibc#Version_history), QNAP QTS 4.x and 5.x, Synology DSM 7, and other environments where a newer glibc is unavailable.
 * **linux-x64-debug**: Linux x64 `Debug` binaries compiled with `--gdb --debug --debug-node` enabled so that they include debug symbols for native module and core node debugging. Tarballs replace the Release `node` with a Debug built binary. Designed with GitHub Actions `actions/setup-node` in mind for investigating CI segfaults.
 * **linux-x64-pointer-compression**: Linux x64 binaries compiled with V8 pointer compression enabled (`--experimental-enable-pointer-compression`).
-* **linux-arm64-pointer-compression**: Linux ARM64 binaries cross-compiled on amd64 Ubuntu 24.04 (glibc 2.39) with GCC 14 and `--experimental-enable-pointer-compression`. The V8 heap is limited to 4 GiB. This variant uses a distinct native-module ABI. Rebuild V8 and `nan` addons with its bundled headers and `config.gypi`.
+* **linux-arm64-pointer-compression**: Linux ARM64 binaries cross-compiled on amd64 Ubuntu 24.04 (glibc 2.39) with GCC 14 and `--experimental-enable-pointer-compression`. The V8 heap is limited to 4 GiB.
 * **linux-armv6l**: Linux ARMv6 binaries, cross-compiled on Ubuntu 22.04 with a [custom GCC 12 toolchain](https://github.com/rvagg/rpi-newer-crosstools). Binaries are optimized for `armv6zk` which is suitable for Raspberry Pi devices (1, 1+ and Zero in particular).
 * **linux-riscv64**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with GCC 14.
 * **linux-riscv64-pointer-compression**: Linux RISC-V 64-bit, cross-compiled on Ubuntu 24.04 with clang-19 and  --experimental-pointer-compression enabled to reduce RAM usage.
