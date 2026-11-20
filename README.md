@@ -61,7 +61,7 @@ Builds are published at <https://unofficial-builds.nodejs.org/download/release/>
 | linux-x64-glibc-217 | v18 - v23 | v24+: Python too old in CentOS 7 container ([#177], [#176]) |
 | linux-x64-debug | v18 - v23 | v24+: C++ compiler too old ([#180]) |
 | linux-x64-pointer-compression | v14 - v22 | v23+: CentOS 7 toolchain too old ([#155], [#158]) |
-| linux-arm64-pointer-compression | v22.17+, v24.2+, v26.x | The server's active keyring cannot verify `v22.17.0` or `v24.2.0`. To backfill either, verify its signed checksums with the [historical Node.js release keys](https://github.com/nodejs/release-keys/tree/HEAD/gpg), check the source tarball's SHA-256, and stage it in `$workdir/staging/src/<version>/` for `bin/local_build.sh`. |
+| linux-arm64-pointer-compression | v22.17+, v24.2+, v26.x | Added in [#260] |
 | linux-armv6l | v16 - v23 | v24+: cross-compiler failure ([#179]) |
 
 ### Archived recipes
